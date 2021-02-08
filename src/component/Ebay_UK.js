@@ -1,7 +1,7 @@
 
 import React, { Component, useState, useEffect } from 'react'
 
-export class EbayUs extends Component {
+export class EbayUK extends Component {
     constructor() {
         super()
         this.state = {
@@ -16,7 +16,7 @@ export class EbayUs extends Component {
         var temp;
         var finalObj = {};
         var allKeyId = {}
-        await fetch('https://raw.githubusercontent.com/erashish455/text/main/asdf.txt').then(response => response.text())
+        await fetch('https://raw.githubusercontent.com/erashish455/text/main/Ebay_UK.txt').then(response => response.text())
             .then(data => {
                 let maxLength = 0
                 let txt = data
@@ -42,9 +42,9 @@ export class EbayUs extends Component {
                     finalObj = this.combine(finalObj, nested);
                 });
                 // console.log(finalObj)
-                // console.log(maxLength)
+                console.log(maxLength)
                 // console.log(allKeyId)
-                this.recurtion(finalObj, allKeyId)
+                // this.recurtion(finalObj, allKeyId)
 
             })
     }
@@ -178,7 +178,7 @@ export class EbayUs extends Component {
                                             name: eleGama,
                                             marketplace_id: child,
                                             marketplace_parent_id: parent,
-                                            marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}>${eleGama}`, level: 7, children: []
+                                            marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}>${eleGama}`, level: 7, children: []
                                         }
 
                                     })
@@ -187,7 +187,7 @@ export class EbayUs extends Component {
                                         name: eleBeta,
                                         marketplace_id: child,
                                         marketplace_parent_id: parent,
-                                        marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}`, level: 6, children: ObjectGamaToAdd
+                                        marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}`, level: 6, children: ObjectGamaToAdd
                                     }
                                 })
 
@@ -195,7 +195,7 @@ export class EbayUs extends Component {
                                     name: eleAlfa,
                                     marketplace_id: child,
                                     marketplace_parent_id: parent,
-                                    marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}`, children: ObjBetaToAdd, level: 5
+                                    marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}`, children: ObjBetaToAdd, level: 5
                                 }
                                 // }
                             })
@@ -203,35 +203,35 @@ export class EbayUs extends Component {
                                 name: eleAny,
                                 marketplace_id: child,
                                 marketplace_parent_id: parent,
-                                marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}`, children: ObjAlfaToAdd, level: 4
+                                marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}`, children: ObjAlfaToAdd, level: 4
                             }
                         })
                         ObjShowToAdd[indexShow] = {
                             name: eleShow,
                             marketplace_id: child,
                             marketplace_parent_id: parent,
-                            marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}`, children: ObjAnyToAdd, level: 3
+                            marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}`, children: ObjAnyToAdd, level: 3
                         }
                     })
                     ObjActToAdd[indexAct] = {
                         name: eleAct,
                         marketplace_id: child,
                         marketplace_parent_id: parent,
-                        marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}>${eleAct}`, children: ObjShowToAdd, level: 2
+                        marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}>${eleAct}`, children: ObjShowToAdd, level: 2
                     }
                 })
                 ObjContToAdd[indexCont] = {
                     name: eleCont,
                     marketplace_id: child,
                     marketplace_parent_id: parent,
-                    marketplace: 'Ebay_US', full_path: `${eleModule}>${eleCont}`, children: ObjActToAdd, level: 1
+                    marketplace: 'Ebay_UK', full_path: `${eleModule}>${eleCont}`, children: ObjActToAdd, level: 1
                 }
             })
             nodes[indexMod] = {
                 name: eleModule,
                 marketplace_id: child,
                 marketplace_parent_id: parent,
-                marketplace: 'Ebay_US', full_path: `${eleModule}`, children: ObjContToAdd, level: 0
+                marketplace: 'Ebay_UK', full_path: `${eleModule}`, children: ObjContToAdd, level: 0
             }
         })
         // console.log(nodes)
@@ -255,6 +255,6 @@ export class EbayUs extends Component {
     }
 }
 
-export default EbayUs
+export default EbayUK
 
 
