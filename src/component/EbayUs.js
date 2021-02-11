@@ -25,11 +25,16 @@ export class EbayUs extends Component {
                 temp.shift();
                 temp.pop();
                 // console.log(temp)
+                let unique = {}
 
                 temp.forEach((item) => {
                     let bpl = item.split(' - ')
                     let spl = item.split(' - ')[1].split('//')
                     // console.log(spl)
+                    spl.forEach((a) => {
+                        // console.log(item.trim())
+                        unique[a.trim()] = ''
+                    })
                     if (spl.length > maxLength) {
                         maxLength = spl.length
                     }
@@ -41,7 +46,9 @@ export class EbayUs extends Component {
 
                     finalObj = this.combine(finalObj, nested);
                 });
+                // console.log(unique)
                 // console.log(finalObj)
+                // console.log(Object.keys(unique).length)
                 // console.log(maxLength)
                 // console.log(allKeyId)
                 this.recurtion(finalObj, allKeyId)
@@ -234,8 +241,9 @@ export class EbayUs extends Component {
                 marketplace: 'Ebay_US', full_path: `${eleModule}`, children: ObjContToAdd, level: 0
             }
         })
-        // console.log(nodes)
-        console.log(JSON.stringify(nodes))
+        console.log(nodes)
+        // console.log(JSON.stringify(nodes))
+
 
 
 

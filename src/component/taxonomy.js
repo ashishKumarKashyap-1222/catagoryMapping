@@ -16,16 +16,25 @@ export class Taxonomy extends Component {
         var temp;
         var finalObj = {};
         var allKeyId = {}
-        await fetch('https://raw.githubusercontent.com/erashish455/text/main/asdf.txt').then(response => response.text())
+        // await fetch('https://raw.githubusercontent.com/erashish455/text/main/asdf.txt').then(response => response.text())
+        await fetch('https://shivangi-srivastava-cedcoss.github.io/data-file/taxonomy-with-ids.en-US.txt').then(response => response.text())
             .then(data => {
+                // console.log(data)
                 let txt = data
                 temp = txt.split("\n");
                 temp.shift();
                 temp.pop();
+                let unique = {}
                 temp.forEach((item) => {
+                    // console.log(item)
+
                     let bpl = item.split(' - ')
                     let spl = item.split(' - ')[1].split(">")
                     allKeyId[bpl[1]] = bpl[0].trim();
+                    // console.log(spl)
+                    spl.forEach(a => {
+                        unique[a.trim()] = ''
+                    })
 
                     var nested = spl.reduceRight(function (obj, value) {
                         return { [value.trim()]: obj };
@@ -33,7 +42,9 @@ export class Taxonomy extends Component {
 
                     finalObj = this.combine(finalObj, nested);
                 });
-                // console.log(finalObj)
+                console.log(finalObj)
+                // console.log(unique)
+                // console.log(Object.keys(unique).length)
                 // console.log(allKeyId)
                 this.recurtion(finalObj, allKeyId)
 
