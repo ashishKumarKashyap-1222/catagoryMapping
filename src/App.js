@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { BodyLayout, Button, Card, FlexLayout, Modal, Select, Table, TextField } from '@cedcommerce/ounce-ui'
+import { Button, Card } from '@cedcommerce/ounce-ui'
 import '@cedcommerce/ounce-ui/dist/index.css'
 import Home from './component/Home'
 import Edit from './component/Edit'
@@ -9,7 +9,6 @@ import {
   Route,
   Link,
   Switch,
-  Redirect
 } from 'react-router-dom';
 
 export default class App extends Component {

@@ -1,5 +1,7 @@
-import { Button, Card, FlexLayout, Modal, Select, Table, TextField } from '@cedcommerce/ounce-ui'
+import { Button, Card, FlexLayout, Modal, Select, Table, TextField, Toast } from '@cedcommerce/ounce-ui'
 import React, { Component } from 'react'
+import Home from './Home'
+import Edit_click from './Edit_click'
 
 export default class Edit extends Component {
     constructor(props) {
@@ -45,7 +47,7 @@ export default class Edit extends Component {
 
                             case ('action'):
 
-                                temp['action'] = <Button onClick={() => this.setState({ modal: true })}>Edit</Button>
+                                temp['action'] = <Button onClick={() => this.setState({ modal: true, data: data })}>Edit</Button>
                         }
                     })
                     row.push(temp)
@@ -74,14 +76,12 @@ export default class Edit extends Component {
 
                 <Modal
                     close={() => { this.setState({ modal: !this.state.modal }) }}
-                    heading="Modal"
+                    heading="Edit Catagory"
                     open={this.state.modal}
-                ><Card>
-                        <FlexLayout>
-                            <Select></Select>
-                            <Select></Select>
-                        </FlexLayout>
-                    </Card>
+                >
+                    {/* <Home path={this.state.path}></Home> */}
+                    <Edit_click data={this.state.data}></Edit_click>
+
 
                 </Modal>
 
