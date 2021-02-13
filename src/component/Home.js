@@ -58,10 +58,14 @@ export default class Home extends Component {
                 // }
             });
     }
-    async componentDidMount() {
+    componentDidMount() {
         /**
          * this api fetch root catagory
          */
+        this.fetch()
+
+    }
+    async fetch() {
         await fetch(
             "http://192.168.0.222/ebay/home/public/connector/profile/getRootCategory?marketplace=Ebay_US",
             {
@@ -102,7 +106,7 @@ export default class Home extends Component {
                 e.data.forEach((item) => {
                     a[item.level] = e.data;
                 });
-                console.log(e)
+                // console.log(e)
 
                 this.setState({
                     previousGoogle: a,
@@ -118,7 +122,7 @@ export default class Home extends Component {
             let options1 = [];
             if (marketplace == "google") {
                 let a = this.state.google[0];
-                console.log(a)
+                // console.log(a)
                 for (let i = 0; i < a.length; i++) {
                     options1.push({
                         label: a[i].custom_category_path,
@@ -175,7 +179,7 @@ export default class Home extends Component {
             if (Object.keys(this.state.data).length > 1) {
                 this.state.data[aOther].forEach((temp) => {
                     if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                        mapping["Ebay"] = temp.full_path;
+                        mapping["Ebay"] = temp.marketplace_id;
                     } else if (temp.next_level == this.state.lastKeyOther) {
                         mapping["Ebay"] = temp.marketplace_id;
 
@@ -191,8 +195,13 @@ export default class Home extends Component {
                 delete finalData['custom_category_path']
                 delete finalData['parent_id']
                 delete finalData['is_child']
+                delete finalData['next_level']
                 finalData = [finalData]
                 update(finalData)
+                this.setState({
+                    google: [],
+                    data: []
+                }, () => { this.fetch() })
 
 
 
@@ -293,6 +302,8 @@ export default class Home extends Component {
                                 value={this.state.next_levelGoogle}
                             />
                             {Object.keys(this.state.google).map((a, i) => {
+
+                                // console.log(a)
                                 let tempVal = {};
                                 var options1 = [];
 
@@ -304,10 +315,8 @@ export default class Home extends Component {
                                         });
                                     }
 
-                                    // console.log(a)
-                                    // console.log(this.state.google[a][0])
+
                                     tempVal[a] = this.state.google[a][0].next_level;
-                                    // console.log(tempVal[a].$oid)
                                     return (
                                         <Select
                                             key={i}

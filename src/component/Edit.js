@@ -33,26 +33,29 @@ export default class Edit extends Component {
         }).then(res => res.json())
             .then(e => {
                 let row = []
-                console.log(e)
                 e.data.forEach(data => {
-                    let temp = {}
-                    Object.keys(this.state.columns).map(key => {
+                    console.log(data)
+                    if (Object.keys(data).includes('mapping')) {
 
-                        // console.log(data)
-                        switch (key) {
-                            case ('Cedcommerce Catagory'):
-                                temp['Cedcommerce Catagory'] = data.full_path
-                            case ('Mapped Catagory'):
-                                temp['Mapped Catagory'] = ''
-
-                            case ('action'):
-
-                                temp['action'] = <Button onClick={() => this.setState({ modal: true, data: data })}>Edit</Button>
-                        }
-                    })
-                    row.push(temp)
+                        console.log(data)
+                        let temp = {}
+                        Object.keys(this.state.columns).map(key => {
 
 
+                            switch (key) {
+                                case ('Cedcommerce Catagory'):
+                                    temp['Cedcommerce Catagory'] = data.full_path
+                                case ('Mapped Catagory'):
+                                    temp['Mapped Catagory'] = data.mapping.Ebay
+
+                                case ('action'):
+
+                                    temp['action'] = <Button onClick={() => this.setState({ modal: true, data: data })}>Edit</Button>
+                            }
+                        })
+                        row.push(temp)
+
+                    }
                 })
                 this.setState({ rows: row })
 
@@ -60,6 +63,7 @@ export default class Edit extends Component {
 
 
             })
+
     }
 
     render() {

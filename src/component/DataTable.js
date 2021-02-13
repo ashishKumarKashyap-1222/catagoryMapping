@@ -1,5 +1,6 @@
 import { Button, Card, Table } from '@cedcommerce/ounce-ui'
 import React, { Component } from 'react'
+import update from './function'
 
 
 export default class DataTable extends Component {
@@ -33,12 +34,19 @@ export default class DataTable extends Component {
 
 
         let path = ''
+        let id = ''
         source.forEach(item => {
             if (item.next_level["$oid"] == this.props.lastKey) {
                 path = item.full_path
+                id = item.marketplace_id
+                console.log(id)
 
             } else if (item.next_level == this.props.lastKey) {
                 path = item.full_path
+                id = item.marketplace_id
+                console.log(item)
+
+
 
             }
         })
@@ -51,8 +59,6 @@ export default class DataTable extends Component {
         this.state.dataGoogle.forEach(data => {
             let temp = {}
             Object.keys(columns).map(key => {
-
-                // console.log(data)
                 switch (key) {
                     case ('Source'):
                         temp['Source'] = path
@@ -60,7 +66,7 @@ export default class DataTable extends Component {
                         temp['target'] = data.full_path
 
                     case ('action'):
-                        temp['action'] = <Button onClick={() => this.submit(data, path)}>Select</Button>
+                        temp['action'] = <Button onClick={() => this.submit(data, id)}>Select</Button>
                 }
             })
             row.push(temp)
@@ -83,7 +89,12 @@ export default class DataTable extends Component {
         let mapping = {}
         mapping['Ebay'] = full_Path
         val['mapping'] = mapping
+        delete val['custom_category_path']
+        delete val['parent_id']
+        delete val['is_child']
+        delete val['_id']
         console.log(val)
+        update([val])
 
 
 
@@ -95,8 +106,8 @@ export default class DataTable extends Component {
 
 
             <Card cardType="selego">
-                {/* {this.state.dataOther == true ?  this.datatable(): null} */}
                 {this.props.lastKey && this.datatable()}
+                {this.datatable()}
             </Card>
 
 

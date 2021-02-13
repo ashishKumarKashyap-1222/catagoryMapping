@@ -7,12 +7,12 @@ import {
     Card,
     FlexLayout,
     Select,
+    Table,
     TextField,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
-import EbayUs from "./EbayUs";
-import Taxonomy from "./taxonomy";
+import update from "./function";
 
 export default class Edit_click extends Component {
     constructor(props) {
@@ -20,18 +20,23 @@ export default class Edit_click extends Component {
 
         this.state = {
             data: [],
-            searchGoogle: "",
             searchOther: "",
             next_level: "60251c0257aced67df6a41f2",
-            google: [],
-            next_levelGoogle: "60251e3b6d0ee5056d5289e2",
-            levelgoogle: {},
-            next: {},
-            lastKeyGoogle: "",
             lastKeyOther: "",
-            previousGoogle: [],
             previousOther: [],
-            value: {},
+            // value: {},
+            searchOtherData: [],
+            columns: {
+                'Source': {
+                    'title': 'Source'
+                },
+                'target': {
+                    'title': 'target'
+                },
+                'action': {
+                    'title': 'action'
+                }
+            },
         };
     }
 
@@ -55,7 +60,7 @@ export default class Edit_click extends Component {
                 e.data.forEach((item) => {
                     a[item.level] = e.data;
                 });
-                console.log(e.data[0].next_level);
+                // console.log(e.data[0].next_level);
 
                 this.setState({
                     previousOther: a,
@@ -63,8 +68,25 @@ export default class Edit_click extends Component {
                     data: a,
                 });
             });
+    }
+    options() {
+        /**this function creates options for the select tag */
+        if (this.state.data[0] != undefined) {
+            let options1 = [];
+
+            let a = this.state.data[0];
+            for (let i = 0; i < a.length; i++) {
+                options1.push({
+                    label: a[i].custom_category_path,
+                    value: a[i].next_level,
+                });
+            }
+            return options1;
+        }
+    }
+    searchCatagory(e) {
         fetch(
-            "http://192.168.0.222/ebay/home/public/connector/profile/getRootCategory?marketplace=google",
+            `http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[marketplace]=Ebay_US&filters[name]=${e}`,
             {
                 method: "get",
                 headers: {
@@ -73,82 +95,52 @@ export default class Edit_click extends Component {
                 },
             }
         )
-            .then((response) => response.json())
-            .then((e) => {
-                let a = {};
-                e.data.forEach((item) => {
-                    a[item.level] = e.data;
-                });
-                console.log(e);
+            .then((res) => res.json())
+            .then((data) => {
+                this.setState({ searchOtherData: data.data }, () => console.log(this.state.searchOtherData));
 
-                this.setState({
-                    previousGoogle: a,
-                    next_levelGoogle: e.data[0].next_level,
-
-                    google: a,
-                });
             });
-    }
-    options(marketplace) {
-        /**this function creates options for the select tag */
-        if (this.state.google[0] != undefined && this.state.data[0] != undefined) {
-            let options1 = [];
-            if (marketplace == "google") {
-                let a = this.state.google[0];
-                console.log(a);
-                for (let i = 0; i < a.length; i++) {
-                    options1.push({
-                        label: a[i].custom_category_path,
-                        value: a[i].next_level,
-                    });
-                }
-                // console.log(options1)
-                return options1;
-            } else {
-                let a = this.state.data[0];
-                for (let i = 0; i < a.length; i++) {
-                    options1.push({
-                        label: a[i].custom_category_path,
-                        value: a[i].next_level,
-                    });
-                }
-                // console.log(options1)
-                return options1;
-            }
-        }
     }
 
     onSubmit() {
         let mapping = {};
-        let finalData = this.props.data
-        console.log(this.state.data)
+        let finalData = this.props.data;
+        console.log(this.state.data);
         let aOther = Object.keys(this.state.data)[
             Object.keys(this.state.data).length - 2
         ];
         let bOther = Object.keys(this.state.data)[
             Object.keys(this.state.data).length - 1
         ];
-        console.log(aOther)
-        console.log(bOther)
-        // if (Object.keys(this.state.other).length > 1) {
-        this.state.data[aOther].forEach((temp) => {
-            if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                mapping["Ebay"] = temp.full_path;
-            } else if (temp.next_level == this.state.lastKeyOther) {
-                mapping["Ebay"] = temp.full_path;
-            }
-            this.state.data[bOther].forEach((temp) => {
+        console.log(aOther);
+        console.log(bOther);
+        console.log(this.state.other);
+        if (Object.keys(this.state.data).length > 1) {
+            this.state.data[aOther].forEach((temp) => {
                 if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                    mapping["Ebay"] = temp.full_path;
+                    mapping["Ebay"] = temp.marketplace_id;
+                } else if (temp.next_level == this.state.lastKeyOther) {
+                    mapping["Ebay"] = temp.marketplace_id;
                 }
+                this.state.data[bOther].forEach((temp) => {
+                    if (temp.next_level["$oid"] == this.state.lastKeyOther) {
+                        mapping["Ebay"] = temp.marketplace_id;
+                    }
+                });
             });
-        });
 
-        finalData["mapping"] = mapping;
+            finalData["mapping"] = mapping;
+            delete finalData["custom_category_path"];
+            delete finalData["parent_id"];
+            delete finalData["is_child"];
+            delete finalData["next_level"];
+            delete finalData["_id"];
+            update([finalData]);
 
-        console.log(finalData);
-        // } else alert("plese select atleast one  catagory");
+            console.log(finalData);
+        } else alert("plese select atleast one  catagory");
     }
+
 
     handleChange(e) {
         this.setState({ lastKeyOther: e });
@@ -167,7 +159,6 @@ export default class Edit_click extends Component {
                 let a = {};
                 data1.data.forEach((item) => {
                     a[item.level] = data1.data;
-                    // console.log(item);
                 });
 
                 this.setState({
@@ -177,6 +168,58 @@ export default class Edit_click extends Component {
                 });
             });
     }
+    datatable() {
+
+
+
+
+        let id = ''
+        let row = []
+        let columns = this.state.columns
+        this.state.searchOtherData.forEach(data => {
+            let temp = {}
+            Object.keys(columns).map(key => {
+                switch (key) {
+                    case ('Source'):
+                        temp['Source'] = this.props.data.full_path
+                    case ('target'):
+                        temp['target'] = data.full_path
+
+                    case ('action'):
+                        temp['action'] = <Button onClick={() => this.submit(this.props.data, data.marketplace_id)}>Select</Button>
+                }
+            })
+            row.push(temp)
+
+        })
+        // console.log(row)
+
+
+        return (< Table
+            columns={this.state.columns}
+            rows={row}
+        />)
+
+        // }
+
+
+
+    }
+    submit(data, full_Path) {
+        let val = { ...data }
+        let mapping = {}
+        mapping['Ebay'] = full_Path
+        val['mapping'] = mapping
+        delete val['custom_category_path']
+        delete val['parent_id']
+        delete val['is_child']
+        delete val['_id']
+        console.log(val)
+        // update([val])
+
+
+
+    }
 
     render() {
         return (
@@ -184,7 +227,7 @@ export default class Edit_click extends Component {
                 <BodyLayout>
                     <FlexLayout childWidth="fullWidth">
                         <Card title="Selected Catagory">
-                            <Badge size="large" type="Success">
+                            <Badge size="large" type="none">
                                 {this.props.data.full_path}
                             </Badge>
                         </Card>
@@ -194,7 +237,7 @@ export default class Edit_click extends Component {
                                     this.handleChange(e, "other");
                                     this.setState({ next_level: e });
                                 }}
-                                options={this.options("other")}
+                                options={this.options()}
                                 value={this.state.next_level}
                             />
                             {Object.keys(this.state.data).map((a, p) => {
@@ -225,8 +268,8 @@ export default class Edit_click extends Component {
                             <span
                                 onKeyPress={(a) => {
                                     if (a.key === "Enter") {
-                                        if (this.state.searchGoogle.length > 3) {
-                                            this.searchCatagory(this.state.searchGoogle);
+                                        if (this.state.searchOther.length > 3) {
+                                            this.searchCatagory(this.state.searchOther);
                                         } else {
                                             alert("please enter more appropriate value");
                                         }
@@ -234,8 +277,8 @@ export default class Edit_click extends Component {
                                 }}
                             >
                                 <TextField
-                                    value={this.state.searchGoogle}
-                                    onChange={(a) => this.setState({ searchGoogle: a })}
+                                    value={this.state.searchOther}
+                                    onChange={(a) => this.setState({ searchOther: a })}
                                     placeHolder="Search Your Catagory Here"
                                 />
                             </span>
@@ -248,12 +291,7 @@ export default class Edit_click extends Component {
                     >
                         SUBMIT
           </Button>
-                    {this.state.previousOther && (
-                        <DataTable
-                            previous={this.state.previousOther}
-                            dataGoogle={this.state.searchGoogleData}
-                        />
-                    )}
+                    {this.state.previousOther && this.datatable()}
                 </BodyLayout>
             </Card>
         );
