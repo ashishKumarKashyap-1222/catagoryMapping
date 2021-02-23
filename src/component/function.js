@@ -1,7 +1,7 @@
 
-
-export default function update(data) {
-    fetch(`http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategory`, {
+async function update(data) {
+    let message1 = '';
+    await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategory`, {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
@@ -10,6 +10,9 @@ export default function update(data) {
 
         }
     }).then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => { message1 = data.message })
         .catch(err => console.log(err))
+    console.log(message1)
+    return message1
 }
+export default update

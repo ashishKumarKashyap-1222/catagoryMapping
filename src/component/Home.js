@@ -1,18 +1,9 @@
 import React, { Component } from "react";
 
-import {
-    BodyLayout,
-    Button,
-    Card,
-    FlexLayout,
-    Select,
-    TextField,
-} from "@cedcommerce/ounce-ui";
+import { Button, Card, FlexLayout, Select, TextField, BodyHeader, PageLoader, Modal, Toast, LRLayout, } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
-import EbayUs from "./EbayUs";
-import Taxonomy from "./taxonomy";
-import update from './function'
+import update from "./function";
 
 export default class Home extends Component {
     constructor(props) {
@@ -21,100 +12,102 @@ export default class Home extends Component {
         this.state = {
             data: [],
             searchGoogle: "",
+            loadingPage: true,
             searchOther: "",
-            next_level: '60251c0257aced67df6a41f2',
+            next_level: "",
             google: [],
-            next_levelGoogle: '60251e3b6d0ee5056d5289e2',
+            next_levelGoogle: "",
             levelgoogle: {},
             next: {},
             lastKeyGoogle: "",
             lastKeyOther: "",
-            previousGoogle: [],
-            previousOther: [],
             value: {},
+            valueOther: {},
+            selectedMarketplace: "Ebay_US",
+            childModal: false,
+            addChildrenData: {},
+            childrenName: "",
+            childDataToast: false,
+            childDataMessage: "",
+            options: [
+                { value: "1", label: "Ebay_US" },
+                { value: "2", label: "Ebay_UK" },
+                { value: "3", label: "Ebay_AU" },
+            ],
+            marketPlace: '',
         };
     }
-    searchCatagory(e) {
-        fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[marketplace]=google&filters[name]=${e}`,
-            {
-                method: "get",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
-            }
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                // if (marketplace == 'google') {
-                this.setState({ searchGoogleData: data.data });
-                // console.log(data)
-                // }
-                // else {
-                //     this.setState({ searchOtherData: data.data })
-                //     // console.log(data)
 
-                // }
+    get = (url) => {
+        this.setState({ loadingPage: true });
+        return fetch(`http://192.168.0.222/ebay/home/public/connector/` + url, {
+            method: "get",
+            headers: {
+                Authorization:
+                    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+            },
+        }).then((res) => {
+            this.setState({ loadingPage: false });
+            return res.json();
+        });
+    };
+
+    searchcategory(e) {
+        if (Object.keys(this.state.data).length > 1) {
+            this.setState({ loadingPage: true });
+            this.get(
+                `profile/searchCategory?filters[marketplace]=cedcommerce&filters[name]=${e}`
+            ).then((data) => {
+                this.setState({ searchGoogleData: data.data, loadingPage: false });
             });
+        } else {
+            alert("please choose one marketplace category");
+        }
     }
     componentDidMount() {
         /**
-         * this api fetch root catagory
+         * this api fetch root category
          */
-        this.fetch()
-
+        if (localStorage.getItem("MarketPlace") != undefined) {
+            this.setState({
+                marketPlace: JSON.parse(localStorage.getItem('MarketPlace'))
+            })
+        }
+        this.fetch();
     }
     async fetch() {
-        await fetch(
-            "http://192.168.0.222/ebay/home/public/connector/profile/getRootCategory?marketplace=Ebay_US",
-            {
-                method: "get",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
-            }
-        )
-            .then((response) => response.json())
-            .then((e) => {
+        await this.get(
+            "profile/getRootCategory?marketplace=" + this.state.selectedMarketplace
+        ).then((e) => {
+            if (e.success) {
                 let a = {};
                 e.data.forEach((item) => {
                     a[item.level] = e.data;
                 });
-                console.log(e.data[0].next_level)
 
                 this.setState({
                     previousOther: a,
                     next_level: e.data[0].next_level,
                     data: a,
                 });
-            });
-        fetch(
-            "http://192.168.0.222/ebay/home/public/connector/profile/getRootCategory?marketplace=google",
-            {
-                method: "get",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
+                this.setState({ loadingPage: false });
+            } else {
+                console.error(e);
             }
-        )
-            .then((response) => response.json())
-            .then((e) => {
-                let a = {};
-                e.data.forEach((item) => {
-                    a[item.level] = e.data;
-                });
-                // console.log(e)
-
-                this.setState({
-                    previousGoogle: a,
-                    next_levelGoogle: e.data[0].next_level,
-
-                    google: a,
-                });
+        });
+        this.get("profile/getRootCategory?marketplace=cedcommerce").then((e) => {
+            let a = {};
+            e.data.forEach((item) => {
+                a[item.level] = e.data;
             });
+
+            this.setState({
+                previousGoogle: a,
+                next_levelGoogle: e.data[0].next_level,
+
+                google: a,
+            });
+        });
     }
     options(marketplace) {
         /**this function creates options for the select tag */
@@ -122,14 +115,12 @@ export default class Home extends Component {
             let options1 = [];
             if (marketplace == "google") {
                 let a = this.state.google[0];
-                // console.log(a)
                 for (let i = 0; i < a.length; i++) {
                     options1.push({
                         label: a[i].custom_category_path,
                         value: a[i].next_level,
                     });
                 }
-                // console.log(options1)
                 return options1;
             } else {
                 let a = this.state.data[0];
@@ -139,7 +130,6 @@ export default class Home extends Component {
                         value: a[i].next_level,
                     });
                 }
-                // console.log(options1)
                 return options1;
             }
         }
@@ -163,14 +153,12 @@ export default class Home extends Component {
         if (Object.keys(this.state.google).length > 1) {
             this.state.google[a].forEach((temp) => {
                 if (temp.next_level["$oid"] == this.state.lastKeyGoogle) {
-                    // mapping["marketplace_code"] = temp.full_path
                     finalData = temp;
                 } else if (temp.next_level == this.state.lastKeyGoogle) {
                     finalData = temp;
                 }
                 this.state.google[b].forEach((temp) => {
                     if (temp.next_level["$oid"] == this.state.lastKeyGoogle) {
-                        // mapping["marketplace_code"] = temp.full_path
                         finalData = temp;
                     }
                 });
@@ -179,194 +167,499 @@ export default class Home extends Component {
             if (Object.keys(this.state.data).length > 1) {
                 this.state.data[aOther].forEach((temp) => {
                     if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                        mapping["Ebay"] = temp.marketplace_id;
+                        // console.log(this.state.lastKeyOther)
+                        mapping["Ebay_US"] = temp.next_level["$oid"];
                     } else if (temp.next_level == this.state.lastKeyOther) {
-                        mapping["Ebay"] = temp.marketplace_id;
-
+                        mapping["Ebay_US"] = temp.next_level;
                     }
                     this.state.data[bOther].forEach((temp) => {
                         if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                            // console.log(temp.full_path);
-                            mapping["Ebay"] = temp.marketplace_id;
+                            mapping["Ebay_US"] = temp.next_level["$oid"];
                         }
                     });
                 });
                 finalData["mapping"] = mapping;
-                delete finalData['custom_category_path']
-                delete finalData['parent_id']
-                delete finalData['is_child']
-                delete finalData['next_level']
-                finalData = [finalData]
-                update(finalData)
-                this.setState({
-                    google: [],
-                    data: []
-                }, () => { this.fetch() })
-
-
-
+                delete finalData["custom_category_path"];
+                delete finalData["parent_id"];
+                delete finalData["is_child"];
+                delete finalData["next_level"];
+                finalData = [finalData];
                 console.log(finalData);
-            } else alert("plese selet one catagory");
-        } else alert("plese select atleast one cedcommerce catagory");
+                // update(finalData);
+                this.setState(
+                    {
+                        data: [],
+                        searchGoogle: "",
+                        loadingPage: true,
+                        searchOther: "",
+                        next_level: "",
+                        google: [],
+                        next_levelGoogle: "",
+                        levelgoogle: {},
+                        next: {},
+                        lastKeyGoogle: "",
+                        lastKeyOther: "",
+                        value: {},
+                        valueOther: {},
+                        selectedMarketplace: "Ebay_US",
+                        childModal: false,
+                        addChildrenData: {},
+                        childrenName: "",
+                        childDataToast: false,
+                        childDataMessage: "",
+                        options: [
+                            { value: "1", label: "Ebay_US" },
+                            { value: "2", label: "Ebay_UK" },
+                            { value: "3", label: "Ebay_AU" },
+                        ],
+                        marketPlace: ''
+                    },
+                    () => {
+                        this.fetch();
+                    }
+                );
+            } else alert("plese select one category");
+        } else alert("plese select atleast one cedcommerce category");
     }
 
     handleChange(e, marketplace) {
+        this.setState({ loadingPage: true });
+        let delLevel = 0;
+        let delLevelOther = 0;
         if (marketplace == "google") {
             this.setState({ lastKeyGoogle: e });
         } else {
             this.setState({ lastKeyOther: e });
         }
-        fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/getCatrgoryNextLevel?next_level=${e}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
-            }
-        )
-            .then((response) => response.json())
-            .then((data1) => {
-                let a = {};
-                data1.data.forEach((item) => {
-                    a[item.level] = data1.data;
-                    // console.log(item);
+        if (marketplace == "google") {
+            Object.keys(this.state.google).map((a) => {
+                this.state.google[a].forEach((m) => {
+                    if (m.next_level.$oid == undefined) {
+                        if (e == m.next_level) {
+                            delLevel = m.level;
+                        }
+                    } else {
+                        if (e == m.next_level.$oid) {
+                            delLevel = m.level;
+                        }
+                    }
                 });
-                if (marketplace === "google") {
-                    this.setState({
-                        previousGoogle: this.state.google,
-                        google: { ...this.state.google, ...a },
-                    });
-                } else {
-                    this.setState({
-                        previousOther: this.state.data,
-
-                        data: { ...this.state.data, ...a },
-                    });
-                    // console.log(this.state.previousOther);
-                }
             });
+
+            let obj1 = Object.keys(this.state.google);
+            let abc1 = { ...this.state.google };
+            let xyz1 = { ...this.state.value };
+
+            for (let i = delLevel + 1; i <= obj1.length; i++) {
+                delete abc1[i];
+                delete xyz1[i];
+            }
+            this.setState({
+                google: abc1,
+                value: xyz1,
+            });
+        } else {
+            Object.keys(this.state.data).map((a) => {
+                this.state.data[a].forEach((m) => {
+                    if (m.next_level.$oid == undefined) {
+                        if (e == m.next_level) {
+                            delLevelOther = m.level;
+                        }
+                    } else {
+                        if (e == m.next_level.$oid) {
+                            delLevelOther = m.level;
+                        }
+                    }
+                });
+            });
+
+            let obj2 = Object.keys(this.state.data);
+            let abc2 = { ...this.state.data };
+            let xyz2 = { ...this.state.valueOther };
+
+            for (let i = delLevelOther + 1; i <= obj2.length; i++) {
+                delete abc2[i];
+                delete xyz2[i];
+            }
+            this.setState({
+                data: abc2,
+                valueOther: xyz2,
+            });
+        }
+
+        this.get(`profile/getCatrgoryNextLevel?next_level=${e}`).then((data1) => {
+            let a = {};
+            data1.data.forEach((item) => {
+                a[item.level] = [...data1.data];
+            });
+            if (marketplace === "google") {
+                this.setState((preState) => {
+                    preState.loadingPage = false;
+                    preState.previousGoogle = this.state.google;
+                    preState.google = { ...preState.previousGoogle, ...a };
+                    return preState;
+                });
+            } else {
+                this.setState({
+                    previousOther: this.state.data,
+                    loadingPage: false,
+
+                    data: { ...this.state.data, ...a },
+                });
+            }
+        });
+    }
+
+    renderMarketplaceCategory = () => {
+        return (
+            <Card>
+                {this.state.marketPlace && <BodyHeader title={(this.state.options)[this.state.marketPlace - 1].label + ` Category`} />}
+                <div className="mt-10">
+                    <Select
+                        onChange={(e) => {
+                            this.setState({ next_level: e }, () =>
+                                this.handleChange(e, "other")
+                            );
+                        }}
+                        placeholder="Choose"
+                        options={this.options("other")}
+                        value={this.state.next_level}
+                    />
+                </div>
+                {Object.keys(this.state.data).map((a, p) => {
+                    // console.log(this.state.data)
+                    var options1 = [];
+                    if (a != 0) {
+                        for (var i = 0; i < this.state.data[a].length; i++) {
+                            options1.push({
+                                label: this.state.data[a][i].name,
+                                value: this.state.data[a][i].next_level.$oid,
+                            });
+                        }
+
+                        return (
+                            <div className="mt-10">
+                                <Select
+                                    key={p}
+                                    placeholder="Choose"
+                                    value={this.state.valueOther[a]}
+                                    options={options1}
+                                    onChange={(e) => {
+                                        let val = { ...this.state.valueOther };
+                                        val[a] = e;
+                                        this.setState(
+                                            {
+                                                valueOther: val,
+                                            },
+                                            () => this.handleChange(e, "other")
+                                        );
+                                    }}
+                                />
+                            </div>
+                        );
+                    }
+                })}
+            </Card>
+        );
+    };
+    addChildren(data) {
+        let temp = {
+            marketplace_parent_id: this.state.google[0][0].marketplace_parent_id,
+            marketplace: this.state.google[0][0].marketplace,
+        };
+        let objects = data ?? temp;
+
+        this.setState({
+            childModal: true,
+            addChildrenData: objects,
+        });
+    }
+    async updateChild(name) {
+        if (name.length > 3) {
+            let data = this.state.addChildrenData;
+            data["name"] = name;
+            console.log(data);
+            await fetch(
+                `http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategoryChild`,
+                {
+                    method: "post",
+                    body: JSON.stringify([data]),
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization:
+                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+                    },
+                }
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    this.setState(
+                        { childDataMessage: data.message, childDataToast: true },
+                        () => {
+                            this.setState(
+                                {
+                                    data: [],
+                                    searchGoogle: "",
+                                    loadingPage: true,
+                                    searchOther: "",
+                                    next_level: "",
+                                    google: [],
+                                    next_levelGoogle: "",
+                                    levelgoogle: {},
+                                    next: {},
+                                    lastKeyGoogle: "",
+                                    lastKeyOther: "",
+                                    value: {},
+                                    valueOther: {},
+                                    selectedMarketplace: "Ebay_US",
+                                    childModal: false,
+                                    addChildrenData: {},
+                                    childrenName: "",
+                                    childDataToast: false,
+                                    childDataMessage: "",
+                                },
+                                () => {
+                                    this.fetch();
+                                }
+                            );
+                        }
+                    );
+                })
+                .catch((err) => console.log(err));
+        } else {
+            alert("Enter More Appropriate name");
+        }
+    }
+    renderAddChildModal = () => {
+        return (
+            <>
+                <BodyHeader thickness="thin" title={"Name"} />
+                <TextField
+                    thickness="thin"
+                    value={this.state.childrenName}
+                    onChange={(a) => {
+                        this.setState({ childrenName: a });
+                    }}
+                    placeholder="Enter Category Name"
+                />
+                <BodyHeader thickness="thin" title={"Parent Id"} />
+                <TextField
+                    thickness="thin"
+                    title="Parent ID"
+                    readOnly={true}
+                    value={this.state.addChildrenData.marketplace_parent_id}
+                />
+                <BodyHeader thickness="thin" title={"Marketplace Name"} />
+                <TextField
+                    thickness="thin"
+                    readOnly={true}
+                    value={this.state.addChildrenData.marketplace}
+                />
+                <Button
+                    onClick={() => {
+                        this.updateChild(this.state.childrenName);
+                    }}
+                >
+                    Add
+        </Button>
+            </>
+        );
+    };
+
+    renderCedcommerceCategory = () => {
+        return (
+            <Card>
+                <BodyHeader title={"CedCommerce category"} />
+                <div className="mt-10">
+                    <FlexLayout childWidth="fullWidth">
+                        <Select
+                            onChange={(e) => {
+                                this.handleChange(e, "google");
+                                this.setState({ next_levelGoogle: e });
+                            }}
+                            placeholder="Choose"
+                            options={this.options("google")}
+                            value={this.state.next_levelGoogle}
+                        />
+                    </FlexLayout>
+                </div>
+
+                {Object.keys(this.state.google).map((a, i) => {
+                    var options1 = [];
+                    let data = {};
+
+                    if (a != 0) {
+                        for (var i = 0; i < this.state.google[a].length; i++) {
+                            console.log(this.state.google[a][i]['mapping'])
+                            if (this.state.google[a][i]['mapping'] != undefined) {
+                                options1.push({
+                                    label: this.state.google[a][i].name + `(Mapped)`,
+                                    value: this.state.google[a][i].next_level.$oid,
+                                });
+
+                            }
+                            else {
+                                options1.push({
+                                    label: this.state.google[a][i].name,
+                                    value: this.state.google[a][i].next_level.$oid,
+                                });
+
+                            }
+
+                        }
+                        data = {
+                            marketplace_parent_id: this.state.google[a][0]
+                                .marketplace_parent_id,
+                            marketplace: this.state.google[a][0].marketplace,
+                        };
+
+                        return (
+                            <div className="mt-10">
+                                <FlexLayout
+                                    // childWidth='fullWidth'
+                                    direction="none"
+                                    halign="fill"
+                                    spacing="loose"
+                                    valign="none"
+                                    wrap="wrap">
+                                    <Select
+                                        key={i}
+                                        value={this.state.value[a]}
+                                        placeholder="Choose"
+                                        options={options1}
+                                        onChange={(e) => {
+                                            let val = { ...this.state.value };
+                                            val[a] = e;
+                                            this.setState(
+                                                {
+                                                    value: val,
+                                                },
+                                                () => this.handleChange(e, "google")
+                                            );
+                                        }}
+                                    />
+
+                                    <Button
+                                        onClick={() => {
+                                            this.addChildren(data);
+                                        }}
+                                    >
+                                        Add Child
+                                    </Button>
+
+                                </FlexLayout>
+                            </div>
+                        );
+                    }
+                })}
+            </Card>
+        );
+    };
+
+    renderSearch = () => {
+        return (
+            <>
+                <span
+                    onKeyPress={(a) => {
+                        if (a.key === "Enter") {
+                            if (this.state.searchGoogle.length > 3) {
+                                this.searchcategory(this.state.searchGoogle);
+                            } else {
+                                alert("please enter more appropriate value");
+                            }
+                        }
+                    }}
+                >
+                    <TextField
+                        value={this.state.searchGoogle}
+                        onChange={(a) => this.setState({ searchGoogle: a })}
+                        placeHolder="Search Your category Here"
+                    />
+                </span>
+                {this.state.searchGoogleData && this.state.previousOther && (
+                    <DataTable
+                        lastKey={this.state.lastKeyOther}
+                        previous={this.state.previousOther}
+                        dataGoogle={this.state.searchGoogleData}
+                        fetch={this.fetch.bind(this)}
+                    />
+                )}
+            </>
+        );
+    };
+    handleChange1(value) {
+        localStorage.setItem('MarketPlace', JSON.stringify(value))
+        this.setState({ marketPlace: value })
     }
 
     render() {
+        console.log(this.state.options[this.state.marketPlace - 1])
         return (
-            <Card>
-                {/* <EbayUs></EbayUs> */}
-                {/* <EbayUK></EbayUK> */}
-                {/* <Taxonomy></Taxonomy> */}
-                <BodyLayout>
-                    <FlexLayout childWidth="fullWidth">
-                        <Card title="Marketplace catagory">
+            <>
+                {this.state.loadingPage && <PageLoader />}
+                <div style={{ "margin-bottom": "50px" }}>
+                    <FlexLayout
+                        childWidth="none"
+                        direction="none"
+                        halign="end"
+                        spacing="none"
+                        valign="none"
+                        wrap="none"
+                    >
+                        <div className="mt-20">
                             <Select
-                                onChange={(e) => {
-                                    this.handleChange(e, "other");
-                                    this.setState({ next_level: e });
+                                thickness="thin"
+                                placeholder="select marketplace"
+                                value={this.state.marketPlace}
+                                options={this.state.options}
+                                onChange={(a) => {
+                                    this.handleChange1(a)
                                 }}
-                                options={this.options("other")}
-                                value={this.state.next_level}
                             />
-                            {Object.keys(this.state.data).map((a, p) => {
-                                var options1 = [];
-                                let tempVal = {};
-                                if (a != 0) {
-                                    for (var i = 0; i < this.state.data[a].length; i++) {
-                                        options1.push({
-                                            label: this.state.data[a][i].name,
-                                            value: this.state.data[a][i].next_level.$oid,
-                                        });
-                                    }
-                                    tempVal[a] = this.state.data[a][0].next_level;
-
-                                    return (
-                                        <Select
-                                            key={p}
-                                            value={tempVal[a].$oid}
-                                            options={options1}
-                                            onChange={(e) => {
-                                                this.handleChange(e, "other");
-                                                tempVal[a].$oid = e;
-                                            }}
-                                        />
-                                    );
-                                }
-                            })}
-                        </Card>
-                        <Card title="CedCommerce Catagory">
-                            <Select
-                                onChange={(e) => {
-                                    this.handleChange(e, "google");
-                                    this.setState({ next_levelGoogle: e });
-                                }}
-                                options={this.options("google")}
-                                value={this.state.next_levelGoogle}
-                            />
-                            {Object.keys(this.state.google).map((a, i) => {
-
-                                // console.log(a)
-                                let tempVal = {};
-                                var options1 = [];
-
-                                if (a != 0) {
-                                    for (var i = 0; i < this.state.google[a].length; i++) {
-                                        options1.push({
-                                            label: this.state.google[a][i].name,
-                                            value: this.state.google[a][i].next_level.$oid,
-                                        });
-                                    }
-
-
-                                    tempVal[a] = this.state.google[a][0].next_level;
-                                    return (
-                                        <Select
-                                            key={i}
-                                            value={tempVal[a].$oid}
-                                            options={options1}
-                                            onChange={(e) => {
-                                                this.handleChange(e, "google");
-                                                tempVal[a].$oid = e;
-                                            }}
-                                        />
-                                    );
-                                }
-                            })}
-                        </Card>
+                        </div>
                     </FlexLayout>
-                    <Button
-                        onClick={() => {
+                </div>
+                <Card
+                    primaryAction={{
+                        content: "Submit",
+                        onClick: () => {
                             this.onSubmit();
+                        },
+                    }}
+                >
+                    <Modal
+                        open={this.state.childModal}
+                        close={() => {
+                            this.setState({ childModal: false });
                         }}
                     >
-                        SUBMIT
-          </Button>
-
-                    <span
-                        onKeyPress={(a) => {
-                            if (a.key === "Enter") {
-                                if (this.state.searchGoogle.length > 3) {
-                                    this.searchCatagory(this.state.searchGoogle);
-                                    // console.log(this.state.previousOther);
-                                } else {
-                                    alert("please enter more appropriate value");
-                                }
-                            }
-                        }}
-                    >
-                        <TextField
-                            value={this.state.searchGoogle}
-                            onChange={(a) => this.setState({ searchGoogle: a })}
-                            placeHolder="Search Your Catagory Here"
-                        />
-                    </span>
-                    {this.state.searchGoogleData && this.state.previousOther && (
-                        <DataTable
-                            lastKey={this.state.lastKeyOther}
-                            previous={this.state.previousOther}
-                            dataGoogle={this.state.searchGoogleData}
-                        />
-                    )}
-                </BodyLayout>
-            </Card>
+                        {this.renderAddChildModal()}
+                        {this.state.childDataToast && (
+                            <Toast
+                                timeout={500}
+                                message={this.state.childDataMessage}
+                                onDismiss={() => {
+                                    this.setState({ childDataToast: false });
+                                }}
+                            ></Toast>
+                        )}
+                    </Modal>
+                    <FlexLayout childWidth="fullWidth"
+                        direction="none"
+                        halign="center"
+                        spacing="loose"
+                        valign="none"
+                        wrap="none">
+                        {this.renderMarketplaceCategory()}
+                        {this.renderCedcommerceCategory()}
+                    </FlexLayout>
+                </Card>
+                <Card>
+                    <BodyHeader title={"Search"} />
+                    {this.renderSearch()}
+                </Card>
+            </>
         );
     }
 }

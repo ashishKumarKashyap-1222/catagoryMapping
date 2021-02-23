@@ -6,7 +6,6 @@ import update from './function'
 export default class DataTable extends Component {
     constructor(props) {
         super(props)
-        // console.log(props.dataGoogle)
         console.log(props.previous)
         console.log(props.lastKey)
 
@@ -39,18 +38,18 @@ export default class DataTable extends Component {
             if (item.next_level["$oid"] == this.props.lastKey) {
                 path = item.full_path
                 id = item.marketplace_id
-                console.log(id)
+
 
             } else if (item.next_level == this.props.lastKey) {
                 path = item.full_path
                 id = item.marketplace_id
-                console.log(item)
+
+
 
 
 
             }
         })
-        // console.log(path)
         let row = []
         let columns = this.state.columns
 
@@ -72,22 +71,16 @@ export default class DataTable extends Component {
             row.push(temp)
 
         })
-        // console.log(row)
 
         return (< Table
             columns={this.state.columns}
             rows={row}
         />)
-
-        // }
-
-
-
     }
     submit(data, full_Path) {
         let val = { ...data }
         let mapping = {}
-        mapping['Ebay'] = full_Path
+        mapping['Ebay_US'] = full_Path
         val['mapping'] = mapping
         delete val['custom_category_path']
         delete val['parent_id']
@@ -95,6 +88,8 @@ export default class DataTable extends Component {
         delete val['_id']
         console.log(val)
         update([val])
+        setTimeout(() => { window.location.reload(true) }, 700)
+
 
 
 

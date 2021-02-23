@@ -1,44 +1,63 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import { Button, Card } from '@cedcommerce/ounce-ui'
-import '@cedcommerce/ounce-ui/dist/index.css'
-import Home from './component/Home'
-import Edit from './component/Edit'
 import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-} from 'react-router-dom';
+  Button,
+  Card,
+  Tabs,
+  BodyLayout,
+  Select,
+  LRLayout,
+  FlexLayout,
+} from "@cedcommerce/ounce-ui";
+import "@cedcommerce/ounce-ui/dist/index.css";
+import Home from "./component/Home";
+import Edit from "./component/Edit";
+import { Route, Switch, withRouter } from "react-router-dom";
 
-export default class App extends Component {
-  constructor() {
-    super()
-
+class App extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
+      selected: "/",
 
-    }
+    };
   }
+
+
 
   render() {
+    // console.log(this.state.marketPlace)
     return (
-      <Card>
-        <Router>
-          <Button ><Link to="/" style={{ color: 'white' }}>Home</Link></Button>
-          <Button ><Link to="/Edit" style={{ color: 'white' }}>Edit</Link></Button>
+      <BodyLayout>
 
-          <Switch>
-            <Route exact path='/' component={Home} />
-            <Route path='/Edit' component={Edit} />
+        <Tabs
+          onChange={(e) => {
+            this.props.history.push(e);
+            this.setState({ selected: e });
+          }}
+          selected={this.state.selected}
+          value={[
+            {
+              content: "Home",
+              id: "/",
+            },
+            {
+              content: "Edit",
+              id: "/Edit",
+            },
+          ]}
+        />
 
-          </Switch>
 
 
-        </Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
 
-
-      </Card>
-
-    )
+          <Route path="/Edit" component={Edit} />
+        </Switch>
+      </BodyLayout>
+    );
   }
 }
+
+export default withRouter(App);

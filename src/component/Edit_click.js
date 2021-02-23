@@ -9,6 +9,7 @@ import {
     Select,
     Table,
     TextField,
+    Toast,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
@@ -24,8 +25,9 @@ export default class Edit_click extends Component {
             next_level: "60251c0257aced67df6a41f2",
             lastKeyOther: "",
             previousOther: [],
-            // value: {},
+            value: {},
             searchOtherData: [],
+            flag: false,
             columns: {
                 'Source': {
                     'title': 'Source'
@@ -39,13 +41,10 @@ export default class Edit_click extends Component {
             },
         };
     }
-
-    async componentDidMount() {
-        /**
-         * this api fetch root catagory
-         */
-        await fetch(
-            "http://192.168.0.222/ebay/home/public/connector/profile/getRootCategory?marketplace=Ebay_US",
+    get = (url) => {
+        this.setState({ loadingPage: true })
+        return fetch(
+            `http://192.168.0.222/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
@@ -53,8 +52,17 @@ export default class Edit_click extends Component {
                         "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
                 },
             }
-        )
-            .then((response) => response.json())
+        ).then((res) => {
+            this.setState({ loadingPage: false })
+            return res.json()
+        })
+    }
+
+    async componentDidMount() {
+        /**
+         * this api fetch root category
+         */
+        this.get("profile/getRootCategory?marketplace=Ebay_US")
             .then((e) => {
                 let a = {};
                 e.data.forEach((item) => {
@@ -84,18 +92,8 @@ export default class Edit_click extends Component {
             return options1;
         }
     }
-    searchCatagory(e) {
-        fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[marketplace]=Ebay_US&filters[name]=${e}`,
-            {
-                method: "get",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
-            }
-        )
-            .then((res) => res.json())
+    searchcategory(e) {
+        this.get("profile/searchCategory?filters[marketplace]=Ebay_US&filters[name]=" + e)
             .then((data) => {
                 this.setState({ searchOtherData: data.data }, () => console.log(this.state.searchOtherData));
 
@@ -112,19 +110,16 @@ export default class Edit_click extends Component {
         let bOther = Object.keys(this.state.data)[
             Object.keys(this.state.data).length - 1
         ];
-        console.log(aOther);
-        console.log(bOther);
-        console.log(this.state.other);
         if (Object.keys(this.state.data).length > 1) {
             this.state.data[aOther].forEach((temp) => {
                 if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                    mapping["Ebay"] = temp.marketplace_id;
+                    mapping["Ebay_US"] = temp.next_level['$oid'];
                 } else if (temp.next_level == this.state.lastKeyOther) {
-                    mapping["Ebay"] = temp.marketplace_id;
+                    mapping["Ebay_US"] = temp.next_level;
                 }
                 this.state.data[bOther].forEach((temp) => {
                     if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                        mapping["Ebay"] = temp.marketplace_id;
+                        mapping["Ebay_US"] = temp.next_level['$oid'];
                     }
                 });
             });
@@ -135,26 +130,20 @@ export default class Edit_click extends Component {
             delete finalData["is_child"];
             delete finalData["next_level"];
             delete finalData["_id"];
-            update([finalData]);
+            console.log(finalData)
+            update([finalData]).then(data => this.setState({
+                message: data,
+                flag: true
+            }))
 
-            console.log(finalData);
-        } else alert("plese select atleast one  catagory");
+
+        } else alert("plese select atleast one  category");
     }
 
 
     handleChange(e) {
         this.setState({ lastKeyOther: e });
-        fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/getCatrgoryNextLevel?next_level=${e}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-                },
-            }
-        )
-            .then((response) => response.json())
+        this.get("profile/getCatrgoryNextLevel?next_level=" + e)
             .then((data1) => {
                 let a = {};
                 data1.data.forEach((item) => {
@@ -169,11 +158,6 @@ export default class Edit_click extends Component {
             });
     }
     datatable() {
-
-
-
-
-        let id = ''
         let row = []
         let columns = this.state.columns
         this.state.searchOtherData.forEach(data => {
@@ -186,13 +170,12 @@ export default class Edit_click extends Component {
                         temp['target'] = data.full_path
 
                     case ('action'):
-                        temp['action'] = <Button onClick={() => this.submit(this.props.data, data.marketplace_id)}>Select</Button>
+                        temp['action'] = <Button onClick={() => this.submit(this.props.data, data.full_path)}>Select</Button>
                 }
             })
             row.push(temp)
 
         })
-        // console.log(row)
 
 
         return (< Table
@@ -200,7 +183,6 @@ export default class Edit_click extends Component {
             rows={row}
         />)
 
-        // }
 
 
 
@@ -208,14 +190,14 @@ export default class Edit_click extends Component {
     submit(data, full_Path) {
         let val = { ...data }
         let mapping = {}
-        mapping['Ebay'] = full_Path
+        mapping['Ebay_US'] = full_Path
         val['mapping'] = mapping
         delete val['custom_category_path']
         delete val['parent_id']
         delete val['is_child']
         delete val['_id']
-        console.log(val)
-        // update([val])
+        update([val])
+
 
 
 
@@ -226,12 +208,12 @@ export default class Edit_click extends Component {
             <Card>
                 <BodyLayout>
                     <FlexLayout childWidth="fullWidth">
-                        <Card title="Selected Catagory">
+                        <Card title="Selected category">
                             <Badge size="large" type="none">
                                 {this.props.data.full_path}
                             </Badge>
                         </Card>
-                        <Card title="Marketplace catagory">
+                        <Card title="Marketplace category">
                             <Select
                                 onChange={(e) => {
                                     this.handleChange(e, "other");
@@ -269,7 +251,7 @@ export default class Edit_click extends Component {
                                 onKeyPress={(a) => {
                                     if (a.key === "Enter") {
                                         if (this.state.searchOther.length > 3) {
-                                            this.searchCatagory(this.state.searchOther);
+                                            this.searchcategory(this.state.searchOther);
                                         } else {
                                             alert("please enter more appropriate value");
                                         }
@@ -279,9 +261,10 @@ export default class Edit_click extends Component {
                                 <TextField
                                     value={this.state.searchOther}
                                     onChange={(a) => this.setState({ searchOther: a })}
-                                    placeHolder="Search Your Catagory Here"
+                                    placeHolder="Search Your category Here"
                                 />
                             </span>
+                            {this.state.flag && <Toast message={this.state.message} onDismiss={() => { this.setState({ flag: false }) }} />}
                         </Card>
                     </FlexLayout>
                     <Button
