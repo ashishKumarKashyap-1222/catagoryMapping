@@ -40,7 +40,7 @@ export default class Home extends Component {
 
     get = (url) => {
         this.setState({ loadingPage: true });
-        return fetch(`http://192.168.0.222/ebay/home/public/connector/` + url, {
+        return fetch(`https://f4917730e8cc.ngrok.io/ebay/home/public/connector/` + url, {
             method: "get",
             headers: {
                 Authorization:
@@ -71,13 +71,18 @@ export default class Home extends Component {
         if (localStorage.getItem("MarketPlace") != undefined) {
             this.setState({
                 marketPlace: JSON.parse(localStorage.getItem('MarketPlace'))
-            })
+            },()=>this.fetch())
         }
-        this.fetch();
+        else{
+            this.setState({
+                marketPlace:this.state.options[0].value
+            },()=>this.fetch())
+        }
+        ;
     }
     async fetch() {
         await this.get(
-            "profile/getRootCategory?marketplace=" + this.state.selectedMarketplace
+            "profile/getRootCategory?marketplace=" + this.state.options[this.state.marketPlace-1].label
         ).then((e) => {
             if (e.success) {
                 let a = {};
@@ -602,7 +607,7 @@ export default class Home extends Component {
     };
     handleChange1(value) {
         localStorage.setItem('MarketPlace', JSON.stringify(value))
-        this.setState({ marketPlace: value })
+        this.setState({ marketPlace: value },()=>this.fetch())
     }
 
     render() {
