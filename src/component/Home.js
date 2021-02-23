@@ -114,12 +114,23 @@ export default class Home extends Component {
         if (this.state.google[0] != undefined && this.state.data[0] != undefined) {
             let options1 = [];
             if (marketplace == "google") {
+
                 let a = this.state.google[0];
                 for (let i = 0; i < a.length; i++) {
-                    options1.push({
-                        label: a[i].custom_category_path,
-                        value: a[i].next_level,
-                    });
+                    if (this.state.google[0][i]['mapping'] != undefined) {
+                        options1.push({
+                            label: this.state.google[0][i].name + `(Mapped)`,
+                            value: this.state.google[0][i].next_level
+                        });
+
+                    }
+                    else {
+                        options1.push({
+                            label: this.state.google[0][i].name,
+                            value: this.state.google[0][i].next_level
+                        });
+
+                    }
                 }
                 return options1;
             } else {
@@ -519,10 +530,11 @@ export default class Home extends Component {
                                 <FlexLayout
                                     // childWidth='fullWidth'
                                     direction="none"
-                                    halign="fill"
+                                    // halign="fill"
                                     spacing="loose"
-                                    valign="none"
-                                    wrap="wrap">
+                                // valign="none"
+                                // wrap="wrap"
+                                >
                                     <Select
                                         key={i}
                                         value={this.state.value[a]}

@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 
 import {
-  Button,
-  Card,
   Tabs,
   BodyLayout,
-  Select,
-  LRLayout,
-  FlexLayout,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import Home from "./component/Home";

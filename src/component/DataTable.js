@@ -35,12 +35,12 @@ export default class DataTable extends Component {
         let path = ''
         let id = ''
         source.forEach(item => {
-            if (item.next_level["$oid"] == this.props.lastKey) {
+            if (item.next_level["$oid"] === this.props.lastKey) {
                 path = item.full_path
                 id = item.marketplace_id
 
 
-            } else if (item.next_level == this.props.lastKey) {
+            } else if (item.next_level === this.props.lastKey) {
                 path = item.full_path
                 id = item.marketplace_id
 
@@ -63,7 +63,6 @@ export default class DataTable extends Component {
                         temp['Source'] = path
                     case ('target'):
                         temp['target'] = data.full_path
-
                     case ('action'):
                         temp['action'] = <Button onClick={() => this.submit(data, id)}>Select</Button>
                 }

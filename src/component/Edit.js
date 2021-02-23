@@ -1,4 +1,4 @@
-import { Badge, Button, Card, FlexLayout, Modal, PageLoader, Select, Table, TextField, Toast } from '@cedcommerce/ounce-ui'
+import { Badge, Button, Card, Modal, PageLoader, Table, TextField } from '@cedcommerce/ounce-ui'
 import React, { Component } from 'react'
 import Home from './Home'
 import Edit_click from './Edit_click'
