@@ -1,6 +1,17 @@
 import React, { Component } from "react";
 
-import { Button, Card, FlexLayout, Select, TextField, BodyHeader, PageLoader, Modal, Toast, LRLayout, } from "@cedcommerce/ounce-ui";
+import {
+    Button,
+    Card,
+    FlexLayout,
+    Select,
+    TextField,
+    BodyHeader,
+    PageLoader,
+    Modal,
+    Toast,
+    LRLayout,
+} from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
 import update from "./function";
@@ -23,7 +34,6 @@ export default class Home extends Component {
             lastKeyOther: "",
             value: {},
             valueOther: {},
-            selectedMarketplace: "Ebay_US",
             childModal: false,
             addChildrenData: {},
             childrenName: "",
@@ -34,13 +44,13 @@ export default class Home extends Component {
                 { value: "2", label: "Ebay_UK" },
                 { value: "3", label: "Ebay_AU" },
             ],
-            marketPlace: '',
+            marketPlace: "",
         };
     }
 
     get = (url) => {
         this.setState({ loadingPage: true });
-        return fetch(`https://f4917730e8cc.ngrok.io/ebay/home/public/connector/` + url, {
+        return fetch(`http://192.168.0.222/ebay/home/public/connector/` + url, {
             method: "get",
             headers: {
                 Authorization:
@@ -68,21 +78,29 @@ export default class Home extends Component {
         /**
          * this api fetch root category
          */
+        this.storeMarketplace();
+    }
+    storeMarketplace() {
         if (localStorage.getItem("MarketPlace") != undefined) {
-            this.setState({
-                marketPlace: JSON.parse(localStorage.getItem('MarketPlace'))
-            },()=>this.fetch())
+            this.setState(
+                {
+                    marketPlace: JSON.parse(localStorage.getItem("MarketPlace")),
+                },
+                () => this.fetch()
+            );
+        } else {
+            this.setState(
+                {
+                    marketPlace: this.state.options[0].value,
+                },
+                () => this.fetch()
+            );
         }
-        else{
-            this.setState({
-                marketPlace:this.state.options[0].value
-            },()=>this.fetch())
-        }
-        ;
     }
     async fetch() {
         await this.get(
-            "profile/getRootCategory?marketplace=" + this.state.options[this.state.marketPlace-1].label
+            "profile/getRootCategory?marketplace=" +
+            this.state.options[this.state.marketPlace - 1].label
         ).then((e) => {
             if (e.success) {
                 let a = {};
@@ -119,22 +137,27 @@ export default class Home extends Component {
         if (this.state.google[0] != undefined && this.state.data[0] != undefined) {
             let options1 = [];
             if (marketplace == "google") {
-
                 let a = this.state.google[0];
                 for (let i = 0; i < a.length; i++) {
-                    if (this.state.google[0][i]['mapping'] != undefined) {
-                        options1.push({
-                            label: this.state.google[0][i].name + `(Mapped)`,
-                            value: this.state.google[0][i].next_level
-                        });
-
-                    }
-                    else {
+                    if (this.state.google[0][i]["mapping"] != undefined) {
+                        // console.log(this.state.google[0][i]['mapping'].this.state.options[this.state.marketPlace - 1])
+                        let a = this.state.options[this.state.marketPlace - 1].label;
+                        if (this.state.google[0][i]["mapping"][a] != undefined) {
+                            options1.push({
+                                label: this.state.google[0][i].name + `(Mapped)`,
+                                value: this.state.google[0][i].next_level,
+                            });
+                        } else {
+                            options1.push({
+                                label: this.state.google[0][i].name,
+                                value: this.state.google[0][i].next_level,
+                            });
+                        }
+                    } else {
                         options1.push({
                             label: this.state.google[0][i].name,
-                            value: this.state.google[0][i].next_level
+                            value: this.state.google[0][i].next_level,
                         });
-
                     }
                 }
                 return options1;
@@ -184,13 +207,16 @@ export default class Home extends Component {
                 this.state.data[aOther].forEach((temp) => {
                     if (temp.next_level["$oid"] == this.state.lastKeyOther) {
                         // console.log(this.state.lastKeyOther)
-                        mapping["Ebay_US"] = temp.next_level["$oid"];
+                        mapping[this.state.options[this.state.marketPlace - 1].label] =
+                            temp.next_level["$oid"];
                     } else if (temp.next_level == this.state.lastKeyOther) {
-                        mapping["Ebay_US"] = temp.next_level;
+                        mapping[this.state.options[this.state.marketPlace - 1].label] =
+                            temp.next_level;
                     }
                     this.state.data[bOther].forEach((temp) => {
                         if (temp.next_level["$oid"] == this.state.lastKeyOther) {
-                            mapping["Ebay_US"] = temp.next_level["$oid"];
+                            mapping[this.state.options[this.state.marketPlace - 1].label] =
+                                temp.next_level["$oid"];
                         }
                     });
                 });
@@ -228,10 +254,10 @@ export default class Home extends Component {
                             { value: "2", label: "Ebay_UK" },
                             { value: "3", label: "Ebay_AU" },
                         ],
-                        marketPlace: ''
+                        marketPlace: "",
                     },
                     () => {
-                        this.fetch();
+                        this.storeMarketplace();
                     }
                 );
             } else alert("plese select one category");
@@ -329,7 +355,13 @@ export default class Home extends Component {
     renderMarketplaceCategory = () => {
         return (
             <Card>
-                {this.state.marketPlace && <BodyHeader title={(this.state.options)[this.state.marketPlace - 1].label + ` Category`} />}
+                {this.state.marketPlace && (
+                    <BodyHeader
+                        title={
+                            this.state.options[this.state.marketPlace - 1].label + ` Category`
+                        }
+                    />
+                )}
                 <div className="mt-10">
                     <Select
                         onChange={(e) => {
@@ -382,6 +414,7 @@ export default class Home extends Component {
         let temp = {
             marketplace_parent_id: this.state.google[0][0].marketplace_parent_id,
             marketplace: this.state.google[0][0].marketplace,
+            level: this.state.google[0][0].level,
         };
         let objects = data ?? temp;
 
@@ -507,27 +540,31 @@ export default class Home extends Component {
 
                     if (a != 0) {
                         for (var i = 0; i < this.state.google[a].length; i++) {
-                            console.log(this.state.google[a][i]['mapping'])
-                            if (this.state.google[a][i]['mapping'] != undefined) {
-                                options1.push({
-                                    label: this.state.google[a][i].name + `(Mapped)`,
-                                    value: this.state.google[a][i].next_level.$oid,
-                                });
-
-                            }
-                            else {
+                            if (this.state.google[a][i]["mapping"] != undefined) {
+                                let val = this.state.options[this.state.marketPlace - 1].label;
+                                if (this.state.google[a][i]["mapping"][val] != undefined) {
+                                    options1.push({
+                                        label: this.state.google[a][i].name + `(Mapped)`,
+                                        value: this.state.google[a][i].next_level.$oid,
+                                    });
+                                } else {
+                                    options1.push({
+                                        label: this.state.google[a][i].name,
+                                        value: this.state.google[a][i].next_level.$oid,
+                                    });
+                                }
+                            } else {
                                 options1.push({
                                     label: this.state.google[a][i].name,
                                     value: this.state.google[a][i].next_level.$oid,
                                 });
-
                             }
-
                         }
                         data = {
                             marketplace_parent_id: this.state.google[a][0]
                                 .marketplace_parent_id,
                             marketplace: this.state.google[a][0].marketplace,
+                            level: this.state.google[a][0].level,
                         };
 
                         return (
@@ -535,7 +572,7 @@ export default class Home extends Component {
                                 <FlexLayout
                                     // childWidth='fullWidth'
                                     direction="none"
-                                    // halign="fill"
+                                    halign="fill"
                                     spacing="loose"
                                 // valign="none"
                                 // wrap="wrap"
@@ -563,8 +600,7 @@ export default class Home extends Component {
                                         }}
                                     >
                                         Add Child
-                                    </Button>
-
+                  </Button>
                                 </FlexLayout>
                             </div>
                         );
@@ -606,12 +642,12 @@ export default class Home extends Component {
         );
     };
     handleChange1(value) {
-        localStorage.setItem('MarketPlace', JSON.stringify(value))
-        this.setState({ marketPlace: value },()=>this.fetch())
+        localStorage.setItem("MarketPlace", JSON.stringify(value));
+        this.setState({ marketPlace: value }, () => this.fetch());
     }
 
     render() {
-        console.log(this.state.options[this.state.marketPlace - 1])
+        // console.log(this.state.options[this.state.marketPlace - 1])
         return (
             <>
                 {this.state.loadingPage && <PageLoader />}
@@ -631,7 +667,7 @@ export default class Home extends Component {
                                 value={this.state.marketPlace}
                                 options={this.state.options}
                                 onChange={(a) => {
-                                    this.handleChange1(a)
+                                    this.handleChange1(a);
                                 }}
                             />
                         </div>
@@ -662,12 +698,14 @@ export default class Home extends Component {
                             ></Toast>
                         )}
                     </Modal>
-                    <FlexLayout childWidth="fullWidth"
+                    <FlexLayout
+                        childWidth="fullWidth"
                         direction="none"
                         halign="center"
                         spacing="loose"
                         valign="none"
-                        wrap="none">
+                        wrap="none"
+                    >
                         {this.renderMarketplaceCategory()}
                         {this.renderCedcommerceCategory()}
                     </FlexLayout>

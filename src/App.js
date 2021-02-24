@@ -3,17 +3,20 @@ import React, { Component } from "react";
 import {
   Tabs,
   BodyLayout,
+  FlexLayout,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
-import Home from "./component/Home";
-import Edit from "./component/Edit";
+
+import AttributeHome from './component/AttributeHome'
+import CategoryHome from './component/CategoryHome'
 import { Route, Switch, withRouter } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: "/",
+
+      selected1: '/'
 
     };
   }
@@ -23,34 +26,42 @@ class App extends Component {
   render() {
     // console.log(this.state.marketPlace)
     return (
-      <BodyLayout>
-
-        <Tabs
-          onChange={(e) => {
-            this.props.history.push(e);
-            this.setState({ selected: e });
-          }}
-          selected={this.state.selected}
-          value={[
-            {
-              content: "Home",
-              id: "/",
-            },
-            {
-              content: "Edit",
-              id: "/Edit",
-            },
-          ]}
-        />
+      <>
+        <div className='mt-20'>
+          <Tabs
+            onChange={(e) => {
+              this.props.history.push(e);
+              this.setState({ selected1: e });
+            }}
+            selected={this.state.selected}
+            value={[
+              {
+                content: "Category Mapping",
+                id: "/",
+              },
+              {
+                content: "Attribute Mapping",
+                id: "/attribute",
+              },
+            ]}
+          />
+        </div>
 
 
 
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route path='/attribute' component={AttributeHome} />
+          <Route path='/' component={CategoryHome} />
 
-          <Route path="/Edit" component={Edit} />
         </Switch>
-      </BodyLayout>
+
+
+
+
+
+
+
+      </>
     );
   }
 }
