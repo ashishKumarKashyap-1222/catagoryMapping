@@ -4,7 +4,9 @@ import Home from './Home'
 import Edit_click from './Edit_click'
 
 export default class Edit extends Component {
+
     constructor(props) {
+        // console.log(this.props.marketplace)
         super(props)
 
         this.state = {

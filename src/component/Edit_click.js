@@ -93,7 +93,7 @@ export default class Edit_click extends Component {
         }
     }
     searchcategory(e) {
-        this.get("profile/searchCategory?filters[marketplace]=Ebay_US&filters[name]=" + e)
+        this.get("profile/searchCategory?filters[marketplace]=google&filters[name]=" + e)
             .then((data) => {
                 this.setState({ searchOtherData: data.data }, () => console.log(this.state.searchOtherData));
 

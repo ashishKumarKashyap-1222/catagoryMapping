@@ -15,8 +15,18 @@ export default class CategoryHome extends Component {
 
         this.state = {
             selected: "/",
+            marketPlace: ''
         }
+
     }
+    getMarketplaceName(name) {
+        this.setState({
+            marketPlace: name
+        })
+
+
+    }
+
 
     render() {
         return (
@@ -47,9 +57,17 @@ export default class CategoryHome extends Component {
 
 
                 <Switch>
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" component={Home} render={(props) => {
+                        <Home{...props} marketplace={this.marketPlace().bind(this)} />
+                    }} />
 
-                    <Route path="/Edit" component={Edit} />
+                    <Route
+                        path='/Edit'
+                        render={(props) => (
+                            <Edit {...props} marketplace={this.state.marketPlace} />
+                        )}
+                    />
+                    {/* <Route path="/Edit" component={Edit} /> */}
                 </Switch>
 
             </>

@@ -79,15 +79,15 @@ export default class DataTable extends Component {
     submit(data, full_Path) {
         let val = { ...data }
         let mapping = {}
-        mapping['Ebay_US'] = full_Path
+        mapping[this.props.marketPlace] = full_Path
         val['mapping'] = mapping
         delete val['custom_category_path']
         delete val['parent_id']
         delete val['is_child']
         delete val['_id']
         console.log(val)
-        update([val])
-        setTimeout(() => { window.location.reload(true) }, 700)
+        // update([val])
+        // setTimeout(() => { window.location.reload(true) }, 700)
 
 
 
