@@ -671,7 +671,7 @@ export default class Home extends Component {
     render() {
         return (
             <>
-                {this.state.loadingPage && <PageLoader />}
+                {/* {this.state.loadingPage && <PageLoader />}
                 <div style={{ "margin-bottom": "50px" }}>
                     <FlexLayout
                         childWidth="none"
@@ -736,9 +736,9 @@ export default class Home extends Component {
                                 }}
                             ></Toast>
                         )}
-                    </Modal> */}
+                    </Modal> */} */}
                     <Amazon></Amazon>
-                </div>
+                {/* </div> */}
             </>
         );
     }

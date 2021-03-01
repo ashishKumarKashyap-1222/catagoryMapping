@@ -5,6 +5,7 @@ export class Amazon extends Component {
         super()
         this.state = {
             abc: {},
+            data:[]
         }
     }
 
@@ -15,20 +16,49 @@ export class Amazon extends Component {
         var temp;
         var finalObj = {};
         var allKeyId = {}
-        await fetch('https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/Amazon.txt').then(response => response.text())
+        await fetch('https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json').then(response => response.json())
             .then(data => {
-                console.log('data')
-                let maxLength = 0
-                let txt = data
-                temp = txt.split("\n");
-                // console.log(temp)
-                temp.shift();
-                temp.pop();
-                // console.log(temp)
+                // console.log(data)
+                let data1=[]
+                let allKeyId={}
+                console.log(typeof(data))
+                Object.keys(data).map(a=>{
+                    let temp=[]
+                    let val=''
+                   
+                    if(data[a]['path_from_root'].length>1){
+                            data[a]['path_from_root'].forEach(a=>{
+                                val=a.id
 
-                temp.forEach((item) => {
+                                temp.push(`${a.name}`)
+                            })
+                            data1.push(`${val} - ${temp}`)
+                    }
+                    else{
+                        data1.push(`${data[a]['path_from_root'][0].id} - ${data[a]['path_from_root'][0].name}`)
+                    }
+
+                })
+                // console.log((data1))
+                this.setState({
+                    data:data1
+                })
+
+                
+                
+
+                let maxLength = 0
+                // let txt = data
+                // temp = txt.split("\n");
+                // // console.log(temp)
+                // temp.shift();
+                // temp.pop();
+                // // console.log(temp)
+
+                this.state.data.forEach((item) => {
+                    // console.log(item)
                     let bpl = item.split(' - ')
-                    let spl = item.split(' - ')[1].split('//')
+                    let spl = item.split(' - ')[1].split(',')
                     // console.log(spl)
                     if (spl.length > maxLength) {
                         maxLength = spl.length
@@ -44,7 +74,7 @@ export class Amazon extends Component {
                 console.log(finalObj)
                 // console.log(maxLength)
                 // console.log(allKeyId)
-                this.recurtion(finalObj)
+                this.recurtion(finalObj,allKeyId)
 
             })
     }
@@ -61,178 +91,178 @@ export class Amazon extends Component {
         }
         return prevObj;
     }
-    recurtion(object) {
+    recurtion(object,allKeyId) {
         let nodes = [];
         let MajorObj = object
         Object.keys(MajorObj).forEach((eleModule, indexMod) => {
             let ObjContToAdd = [];
-            // let parent = '0'
-            // let child = ''
-            // Object.keys(allKeyId).map((i) => {
+            let parent = '0'
+            let child = ''
+            Object.keys(allKeyId).map((i) => {
 
-            //     if (i.trim() == eleModule) {
-            //         child = allKeyId[i]
-            //     }
-            // })
+                if (i.trim() == eleModule) {
+                    child = allKeyId[i]
+                }
+            })
 
             Object.keys(MajorObj[eleModule]).forEach((eleCont, indexCont) => {
                 let ObjActToAdd = [];
-                // let parent = ''
-                // let child = ''
-                // Object.keys(allKeyId).map((i) => {
-                //     if (i.split('//').length > 1) {
-                //         if (i.split('//')[i.split('//').length - 1].trim() == eleCont) {
-                //             child = allKeyId[i]
+                let parent = ''
+                let child = ''
+                Object.keys(allKeyId).map((i) => {
+                    if (i.split(',').length > 1) {
+                        if (i.split(',')[i.split(',').length - 1].trim() == eleCont) {
+                            child = allKeyId[i]
 
-                //         }
-                //         if (i.split('//')[0].trim() === eleModule) {
-                //             parent = allKeyId[eleModule]
-                //         }
-                //     }
-                // })
+                        }
+                        if (i.split(',')[0].trim() === eleModule) {
+                            parent = allKeyId[eleModule]
+                        }
+                    }
+                })
                 Object.keys(MajorObj[eleModule][eleCont]).forEach((eleAct, indexAct) => {
                     let ObjShowToAdd = []
-                    // let parent = ''
-                    // let child = ''
-                    // Object.keys(allKeyId).map((i) => {
-                    //     if (i.split('//').length > 1) {
-                    //         if (i.split('//')[i.split('//').length - 1].trim() == eleAct) {
-                    //             child = allKeyId[i]
-                    //         }
-                    //         if (i.split('//')[i.split('//').length - 1].trim() == eleCont) {
-                    //             parent = allKeyId[i]
-                    //         }
-                    //     }
-                    // })
+                    let parent = ''
+                    let child = ''
+                    Object.keys(allKeyId).map((i) => {
+                        if (i.split(',').length > 1) {
+                            if (i.split(',')[i.split(',').length - 1].trim() == eleAct) {
+                                child = allKeyId[i]
+                            }
+                            if (i.split(',')[i.split(',').length - 1].trim() == eleCont) {
+                                parent = allKeyId[i]
+                            }
+                        }
+                    })
                     Object.keys(MajorObj[eleModule][eleCont][eleAct]).forEach((eleShow, indexShow) => {
                         let ObjAnyToAdd = [];
-                        // let parent = ''
-                        // let child = ''
-                        // Object.keys(allKeyId).map((i) => {
-                        //     if (i.split('//').length > 1) {
-                        //         if (i.split('//')[i.split('//').length - 1].trim() == eleShow) {
-                        //             child = allKeyId[i]
-                        //         }
-                        //         if (i.split('//')[i.split('//').length - 1].trim() == eleAct) {
-                        //             parent = allKeyId[i]
-                        //         }
-                        //     }
-                        // })
+                        let parent = ''
+                        let child = ''
+                        Object.keys(allKeyId).map((i) => {
+                            if (i.split(',').length > 1) {
+                                if (i.split(',')[i.split(',').length - 1].trim() == eleShow) {
+                                    child = allKeyId[i]
+                                }
+                                if (i.split(',')[i.split(',').length - 1].trim() == eleAct) {
+                                    parent = allKeyId[i]
+                                }
+                            }
+                        })
                         Object.keys(MajorObj[eleModule][eleCont][eleAct][eleShow]).forEach((eleAny, indexAny) => {
                             let ObjAlfaToAdd = []
-                            // let parent = ''
-                            // let child = ''
-                            // Object.keys(allKeyId).map((i) => {
-                            //     if (i.split('//').length > 1) {
-                            //         if (i.split('//')[i.split('//').length - 1].trim() == eleAny) {
-                            //             child = allKeyId[i]
-                            //         }
-                            //         if (i.split('//')[i.split('//').length - 1].trim() == eleShow) {
-                            //             parent = allKeyId[i]
-                            //         }
-                            //     }
-                            // })
+                            let parent = ''
+                            let child = ''
+                            Object.keys(allKeyId).map((i) => {
+                                if (i.split(',').length > 1) {
+                                    if (i.split(',')[i.split(',').length - 1].trim() == eleAny) {
+                                        child = allKeyId[i]
+                                    }
+                                    if (i.split(',')[i.split(',').length - 1].trim() == eleShow) {
+                                        parent = allKeyId[i]
+                                    }
+                                }
+                            })
                             Object.keys(MajorObj[eleModule][eleCont][eleAct][eleShow][eleAny]).forEach((eleAlfa, indexAlfa) => {
                                 let ObjBetaToAdd = [];
-                                // let parent = ''
-                                // let child = ''
-                                // Object.keys(allKeyId).map((i) => {
-                                //     if (i.split('//').length > 1) {
-                                //         if (i.split('//')[i.split('//').length - 1].trim() == eleAlfa) {
-                                //             child = allKeyId[i]
-                                //         }
-                                //         if (i.split('//')[i.split('//').length - 1].trim() == eleAny) {
-                                //             parent = allKeyId[i]
-                                //         }
-                                //     }
-                                // })
+                                let parent = ''
+                                let child = ''
+                                Object.keys(allKeyId).map((i) => {
+                                    if (i.split(',').length > 1) {
+                                        if (i.split(',')[i.split(',').length - 1].trim() == eleAlfa) {
+                                            child = allKeyId[i]
+                                        }
+                                        if (i.split(',')[i.split(',').length - 1].trim() == eleAny) {
+                                            parent = allKeyId[i]
+                                        }
+                                    }
+                                })
                                 Object.keys(MajorObj[eleModule][eleCont][eleAct][eleShow][eleAny][eleAlfa]).forEach((eleBeta, indexBeta) => {
                                     let ObjectGamaToAdd = [];
 
-                                    // let parent = ''
-                                    // let child = ''
-                                    // Object.keys(allKeyId).map((i) => {
-                                    //     if (i.split('//').length > 1) {
-                                    //         if (i.split('//')[i.split('//').length - 1].trim() == eleBeta) {
-                                    //             child = allKeyId[i]
-                                    //         }
-                                    //         if (i.split('//')[i.split('//').length - 1].trim() == eleAlfa) {
-                                    //             parent = allKeyId[i]
-                                    //         }
-                                    //     }
-                                    // })
+                                    let parent = ''
+                                    let child = ''
+                                    Object.keys(allKeyId).map((i) => {
+                                        if (i.split(',').length > 1) {
+                                            if (i.split(',')[i.split(',').length - 1].trim() == eleBeta) {
+                                                child = allKeyId[i]
+                                            }
+                                            if (i.split(',')[i.split(',').length - 1].trim() == eleAlfa) {
+                                                parent = allKeyId[i]
+                                            }
+                                        }
+                                    })
                                     Object.keys(MajorObj[eleModule][eleCont][eleAct][eleShow][eleAny][eleAlfa][eleBeta]).forEach((eleGama, indexGama) => {
-                                        // let parent = ''
-                                        // let child = ''
-                                        // Object.keys(allKeyId).map((i) => {
-                                        //     if (i.split('//').length > 1) {
-                                        //         if (i.split('//')[i.split('//').length - 1].trim() == eleGama) {
-                                        //             child = allKeyId[i]
-                                        //         }
-                                        //         if (i.split('>')[i.split('>').length - 1].trim() == eleBeta) {
-                                        //             parent = allKeyId[i]
-                                        //         }
-                                        //     }
-                                        // })
+                                        let parent = ''
+                                        let child = ''
+                                        Object.keys(allKeyId).map((i) => {
+                                            if (i.split(',').length > 1) {
+                                                if (i.split(',')[i.split(',').length - 1].trim() == eleGama) {
+                                                    child = allKeyId[i]
+                                                }
+                                                if (i.split('>')[i.split('>').length - 1].trim() == eleBeta) {
+                                                    parent = allKeyId[i]
+                                                }
+                                            }
+                                        })
                                         ObjectGamaToAdd[indexGama] = {
                                             name: eleGama,
-                                            // marketplace_id: child,
-                                            // marketplace_parent_id: parent,
+                                            marketplace_id: child,
+                                            marketplace_parent_id: parent,
                                             marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}>${eleGama}`, level: 7, children: []
                                         }
                                     })
                                     ObjBetaToAdd[indexBeta] = {
                                         name: eleBeta,
-                                        // marketplace_id: child,
-                                        // marketplace_parent_id: parent,
+                                        marketplace_id: child,
+                                        marketplace_parent_id: parent,
                                         marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}>${eleBeta}`, level: 6, children: ObjectGamaToAdd
                                     }
                                 })
 
                                 ObjAlfaToAdd[indexAlfa] = {
                                     name: eleAlfa,
-                                    // marketplace_id: child,
-                                    // marketplace_parent_id: parent,
+                                    marketplace_id: child,
+                                    marketplace_parent_id: parent,
                                     marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}>${eleAlfa}`, children: ObjBetaToAdd, level: 5
                                 }
-                                // }
+                               
                             })
                             ObjAnyToAdd[indexAny] = {
                                 name: eleAny,
-                                // marketplace_id: child,
-                                // marketplace_parent_id: parent,
+                                marketplace_id: child,
+                                marketplace_parent_id: parent,
                                 marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}>${eleAny}`, children: ObjAlfaToAdd, level: 4
                             }
                         })
                         ObjShowToAdd[indexShow] = {
                             name: eleShow,
-                            // marketplace_id: child,
-                            // marketplace_parent_id: parent,
+                            marketplace_id: child,
+                            marketplace_parent_id: parent,
                             marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}>${eleShow}`, children: ObjAnyToAdd, level: 3
                         }
                     })
                     ObjActToAdd[indexAct] = {
                         name: eleAct,
-                        // marketplace_id: child,
-                        // marketplace_parent_id: parent,
+                        marketplace_id: child,
+                        marketplace_parent_id: parent,
                         marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}>${eleAct}`, children: ObjShowToAdd, level: 2
                     }
                 })
                 ObjContToAdd[indexCont] = {
                     name: eleCont,
-                    // marketplace_id: child,
-                    // marketplace_parent_id: parent,
+                    marketplace_id: child,
+                    marketplace_parent_id: parent,
                     marketplace: 'Amazon', full_path: `${eleModule}>${eleCont}`, children: ObjActToAdd, level: 1
                 }
             })
             nodes[indexMod] = {
                 name: eleModule,
-                // marketplace_id: child,
-                // marketplace_parent_id: parent,
+                marketplace_id: child,
+                marketplace_parent_id: parent,
                 marketplace: 'Amazon', full_path: `${eleModule}`, children: ObjContToAdd, level: 0
             }
         })
-        console.log(nodes)
+        // console.log(nodes)
         console.log(JSON.stringify(nodes))
 
 
