@@ -1,16 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, lazy, Suspense } from "react";
 
 import {
-    Button,
     Card,
     FlexLayout,
     Select,
     TextField,
     BodyHeader,
     PageLoader,
-    Modal,
-    Toast,
-    PageHeader,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
@@ -44,6 +40,7 @@ export default class Home extends Component {
                 { value: "1", label: "google" },
                 { value: "2", label: "Ebay_UK" },
                 { value: "3", label: "Ebay_AU" },
+                { value: '4', label: "mercadolibre" }
             ],
             marketPlace: "",
         };
@@ -231,14 +228,73 @@ export default class Home extends Component {
                         }
                     });
                 });
-                finalData["mapping"] = mapping;
+                if (finalData['mapping'] == undefined) {
+
+                    let emptyObj = {}
+                    let temp = [mapping[this.state.options[this.state.marketPlace - 1].label]]
+                    let marketPlace = this.state.options[this.state.marketPlace - 1].label
+                    console.log(temp)
+                    emptyObj[marketPlace] = temp
+                    finalData["mapping"] = emptyObj
+
+
+
+
+
+                } else {
+                    if (Object.keys(finalData['mapping']).includes(this.state.options[this.state.marketPlace - 1].label)) {
+                        console.log(1)
+
+                        let temp = finalData['mapping'][this.state.options[this.state.marketPlace - 1].label]
+                        console.log(temp)
+                        let emptyObj = { ...finalData['mapping'] }
+                        console.log(emptyObj)
+                        let marketPlace = this.state.options[this.state.marketPlace - 1].label
+                        if (typeof (temp) == 'object') {
+                            console.log(2)
+                            if (temp.includes(mapping[mapping[this.state.options[this.state.marketPlace - 1].label]])) {
+                                console.log(temp)
+                            } else {
+                                console.log(3)
+                                console.log(mapping[this.state.options[this.state.marketPlace - 1].label])
+                                temp.push(mapping[this.state.options[this.state.marketPlace - 1].label])
+                            }
+
+                        } else {
+                            console.log(4)
+                            if (temp == mapping[this.state.options[this.state.marketPlace - 1].label]) {
+                                temp = [temp]
+                            } else {
+                                temp = [temp]
+
+                                temp.push(mapping[this.state.options[this.state.marketPlace - 1].label])
+                            }
+                        }
+                        emptyObj[marketPlace] = temp
+                        finalData["mapping"] = emptyObj
+
+
+                    } else {
+                        let emptyObj = { ...finalData['mapping'] }
+                        let marketPlace = this.state.options[this.state.marketPlace - 1].label
+                        let temp = [mapping[this.state.options[this.state.marketPlace - 1].label]]
+                        emptyObj[marketPlace] = temp
+
+                        finalData["mapping"] = emptyObj
+
+                    }
+
+
+
+                }
+
                 delete finalData["custom_category_path"];
                 delete finalData["parent_id"];
                 delete finalData["is_child"];
                 delete finalData["next_level"];
                 finalData = [finalData];
                 console.log(finalData);
-                // update(finalData);
+                update(finalData);
                 this.setState(
                     {
                         data: [],
@@ -264,6 +320,7 @@ export default class Home extends Component {
                             { value: "1", label: "google" },
                             { value: "2", label: "Ebay_UK" },
                             { value: "3", label: "Ebay_AU" },
+                            { value: '4', label: "mercadolibre" }
                         ],
                         marketPlace: '',
                     },
@@ -375,6 +432,7 @@ export default class Home extends Component {
                 )}
                 <div className="mt-10">
                     <Select
+                        searchEable
                         onChange={(e) => {
                             this.setState({ next_level: e }, () =>
                                 this.handleChange(e, "other")
@@ -399,6 +457,7 @@ export default class Home extends Component {
                         return (
                             <div className="mt-10">
                                 <Select
+                                    searchEable
                                     key={p}
                                     placeholder="Choose"
                                     value={this.state.valueOther[a]}
@@ -421,6 +480,7 @@ export default class Home extends Component {
             </Card>
         );
     };
+
     // addChildren(data, key) {
     //     // console.log(this.state.google)
     //     // console.log(data)
@@ -551,7 +611,7 @@ export default class Home extends Component {
                             onChange={(e) => {
                                 this.handleChange(e, "google");
                                 this.setState({ next_levelGoogle: e });
-                            }}
+                            }} searchEable
                             placeholder="Choose"
                             options={this.options("google")}
                             value={this.state.next_levelGoogle}
@@ -598,6 +658,7 @@ export default class Home extends Component {
 
                                     <Select
                                         key={i}
+                                        searchEable
                                         value={this.state.value[a]}
                                         placeholder="Choose"
                                         options={options1}
@@ -671,7 +732,7 @@ export default class Home extends Component {
     render() {
         return (
             <>
-                {/* {this.state.loadingPage && <PageLoader />}
+                {this.state.loadingPage && <PageLoader />}
                 <div style={{ "margin-bottom": "50px" }}>
                     <FlexLayout
                         childWidth="none"
@@ -736,9 +797,9 @@ export default class Home extends Component {
                                 }}
                             ></Toast>
                         )}
-                    </Modal> */} */}
-                    <Amazon></Amazon>
-                {/* </div> */}
+                    </Modal> */}
+                    {/* <Amazon></Amazon> */}
+                </div>
             </>
         );
     }

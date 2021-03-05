@@ -40,6 +40,7 @@ export default class Edit extends Component {
         }).then(res => res.json())
             .then(e => {
                 if (e.success) {
+                    console.log(e)
                     let row = []
                     e.data.forEach(data => {
                         if (Object.keys(data).includes('mapping')) {
@@ -78,11 +79,11 @@ export default class Edit extends Component {
                     <TextField placeHolder=' Type category You Want To Search ' onChange={(e) => { this.setState({ value: e }) }} value={this.state.value} />
 
                 </span>
-                <span style={{ float: 'right' }}>
+                {/* <span style={{ float: 'right' }}>
                     <Badge size="large"
                         type="Success"
                     >Total mapped catagory{this.state.length}</Badge>
-                </span>
+                </span> */}
 
 
                 {  this.state.rows && < Table

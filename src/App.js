@@ -1,15 +1,14 @@
-import React, { Component } from "react";
+import React, { Component, lazy, Suspense } from "react";
 
 import {
   Tabs,
-  BodyLayout,
-  FlexLayout,
+  PageLoader,
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
-
-import AttributeHome from './component/AttributeHome'
-import CategoryHome from './component/CategoryHome'
 import { Route, Switch, withRouter } from "react-router-dom";
+
+const AttributeHome = lazy(() => import('./component/AttributeHome'))
+const CategoryHome = lazy(() => import('./component/CategoryHome'))
 
 class App extends Component {
   constructor(props) {
@@ -23,7 +22,6 @@ class App extends Component {
 
 
   render() {
-    // console.log(this.state.marketPlace)
     return (
       <>
         <div className='mt-20'>
@@ -46,14 +44,13 @@ class App extends Component {
           />
         </div>
 
+        <Suspense fallback={<PageLoader />}>
 
-
-        <Switch>
-          <Route path='/attribute' component={AttributeHome} />
-          <Route path='/' component={CategoryHome} />
-
-        </Switch>
-
+          <Switch>
+            <Route path='/attribute' component={AttributeHome} />
+            <Route path='/' component={CategoryHome} />
+          </Switch>
+        </Suspense>
 
 
 

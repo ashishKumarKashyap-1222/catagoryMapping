@@ -1,13 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import { Route, Switch, } from "react-router-dom";
-import Home from "./Home";
-import Edit from "./Edit";
+
 
 import {
     Card,
-    FlexLayout,
+    PageLoader,
     Tabs
 } from "@cedcommerce/ounce-ui";
+// import Home from './Home'
+// import Edit from './Edit'
+const Home = lazy(() => import("./Home"))
+const Edit = lazy(() => import("./Edit"))
 
 export default class CategoryHome extends Component {
     constructor(props) {
@@ -26,7 +29,6 @@ export default class CategoryHome extends Component {
 
 
     }
-
 
     render() {
         return (
@@ -55,20 +57,21 @@ export default class CategoryHome extends Component {
                     </div>
                 </Card>
 
+                <Suspense fallback={<PageLoader />}>
+                    <Switch>
+                        <Route exact path="/" component={Home} render={(props) => {
+                            <Home{...props} marketplace={this.marketPlace().bind(this)} />
+                        }} />
 
-                <Switch>
-                    <Route exact path="/" component={Home} render={(props) => {
-                        <Home{...props} marketplace={this.marketPlace().bind(this)} />
-                    }} />
-
-                    <Route
-                        path='/Edit'
-                        render={(props) => (
-                            <Edit {...props} marketplace={this.state.marketPlace} />
-                        )}
-                    />
-                    {/* <Route path="/Edit" component={Edit} /> */}
-                </Switch>
+                        <Route
+                            path='/Edit'
+                            render={(props) => (
+                                <Edit {...props} marketplace={this.state.marketPlace} />
+                            )}
+                        />
+                        <Route path="/Edit" component={Edit} />
+                    </Switch>
+                </Suspense>
 
             </>
 
