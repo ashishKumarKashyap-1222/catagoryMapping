@@ -7,6 +7,7 @@ import {
     TextField,
     BodyHeader,
     PageLoader,
+    Button, Modal, Toast
 } from "@cedcommerce/ounce-ui";
 import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
@@ -46,21 +47,19 @@ export default class Home extends Component {
         };
     }
 
-    get = (url) => {
+    get = async (url) => {
         this.setState({ loadingPage: true });
-        return fetch(
+        const res = await fetch(
             `http://192.168.0.222/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+                    Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
                 },
             }
-        ).then((res) => {
-            this.setState({ loadingPage: false });
-            return res.json();
-        });
+        );
+        this.setState({ loadingPage: false });
+        return res.json();
     };
 
     searchcategory(e) {
@@ -444,7 +443,7 @@ export default class Home extends Component {
                     />
                 </div>
                 {Object.keys(this.state.data).map((a, p) => {
-                    // console.log(this.state.data)
+
                     var options1 = [];
                     if (a != 0) {
                         for (var i = 0; i < this.state.data[a].length; i++) {
@@ -481,122 +480,122 @@ export default class Home extends Component {
         );
     };
 
-    // addChildren(data, key) {
-    //     // console.log(this.state.google)
-    //     // console.log(data)
-    //     // console.log(key)
+    addChildren(data, key) {
+        // console.log(this.state.google)
+        // console.log(data)
+        // console.log(key)
 
-    //     let temp = {}
-    //     data.forEach(item => {
-    //         if (item['next_level'].$oid == key) {
+        let temp = {}
+        data.forEach(item => {
+            if (item['next_level'].$oid == key) {
 
-    //             temp = {
-    //                 marketplace_parent_id: item.marketplace_id,
-    //                 marketplace: item.marketplace,
-    //                 level: item.level + 1
-    //             };
-    //         }
-    //     })
+                temp = {
+                    marketplace_parent_id: item.marketplace_id,
+                    marketplace: item.marketplace,
+                    level: item.level + 1
+                };
+            }
+        })
 
-    //     // let objects = data ?? temp;
+        // let objects = data ?? temp;
 
-    //     this.setState({
-    //         childModal: true,
-    //         addChildrenData: temp,
-    //     });
-    // }
-    // async updateChild(name) {
-    //     if (name.length > 3) {
-    //         let data = this.state.addChildrenData;
-    //         data["name"] = name;
-    //         console.log(data);
-    //         await fetch(
-    //             `http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategoryChild`,
-    //             {
-    //                 method: "post",
-    //                 body: JSON.stringify([data]),
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     authorization:
-    //                         "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
-    //                 },
-    //             }
-    //         )
-    //             .then((res) => res.json())
-    //             .then((data) => {
-    //                 console.log(data);
-    //                 this.setState(
-    //                     { childDataMessage: data.message, childDataToast: true },
-    //                     () => {
-    //                         this.setState(
-    //                             {
-    //                                 data: [],
-    //                                 searchGoogle: "",
-    //                                 loadingPage: true,
-    //                                 searchOther: "",
-    //                                 next_level: "",
-    //                                 google: [],
-    //                                 next_levelGoogle: "",
-    //                                 levelgoogle: {},
-    //                                 next: {},
-    //                                 lastKeyGoogle: "",
-    //                                 lastKeyOther: "",
-    //                                 value: {},
-    //                                 valueOther: {},
-    //                                 selectedMarketplace: "Ebay_US",
-    //                                 childModal: false,
-    //                                 addChildrenData: {},
-    //                                 childrenName: "",
-    //                                 childDataToast: false,
-    //                                 childDataMessage: "",
-    //                             },
-    //                             () => {
-    //                                 this.fetch();
-    //                             }
-    //                         );
-    //                     }
-    //                 );
-    //             })
-    //             .catch((err) => console.log(err));
-    //     } else {
-    //         alert("Enter More Appropriate name");
-    //     }
-    // }
-    // renderAddChildModal = () => {
-    //     return (
-    //         <>
-    //             <BodyHeader thickness="thin" title={"Name"} />
-    //             <TextField
-    //                 thickness="thin"
-    //                 value={this.state.childrenName}
-    //                 onChange={(a) => {
-    //                     this.setState({ childrenName: a });
-    //                 }}
-    //                 placeholder="Enter Category Name"
-    //             />
-    //             <BodyHeader thickness="thin" title={"Parent Id"} />
-    //             <TextField
-    //                 thickness="thin"
-    //                 title="Parent ID"
-    //                 readOnly={true}
-    //                 value={this.state.addChildrenData.marketplace_parent_id}
-    //             />
-    //             <BodyHeader thickness="thin" title={"Marketplace Name"} />
-    //             <TextField
-    //                 thickness="thin"
-    //                 readOnly={true}
-    //                 value={this.state.addChildrenData.marketplace}
-    //             />
-    //             <Button
-    //                 onClick={() => {
-    //                     this.updateChild(this.state.childrenName);
-    //                 }}
-    //             >
-    //                 Add
-    //     </Button>
-    //         </>
-    //     );
-    // };
+        this.setState({
+            childModal: true,
+            addChildrenData: temp,
+        });
+    }
+    async updateChild(name) {
+        if (name.length > 3) {
+            let data = this.state.addChildrenData;
+            data["name"] = name;
+            console.log(data);
+            await fetch(
+                `http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategoryChild`,
+                {
+                    method: "post",
+                    body: JSON.stringify([data]),
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization:
+                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+                    },
+                }
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    this.setState(
+                        { childDataMessage: data.message, childDataToast: true },
+                        () => {
+                            this.setState(
+                                {
+                                    data: [],
+                                    searchGoogle: "",
+                                    loadingPage: true,
+                                    searchOther: "",
+                                    next_level: "",
+                                    google: [],
+                                    next_levelGoogle: "",
+                                    levelgoogle: {},
+                                    next: {},
+                                    lastKeyGoogle: "",
+                                    lastKeyOther: "",
+                                    value: {},
+                                    valueOther: {},
+                                    selectedMarketplace: "Ebay_US",
+                                    childModal: false,
+                                    addChildrenData: {},
+                                    childrenName: "",
+                                    childDataToast: false,
+                                    childDataMessage: "",
+                                },
+                                () => {
+                                    this.fetch();
+                                }
+                            );
+                        }
+                    );
+                })
+                .catch((err) => console.log(err));
+        } else {
+            alert("Enter More Appropriate name");
+        }
+    }
+    renderAddChildModal = () => {
+        return (
+            <>
+                <BodyHeader thickness="thin" title={"Name"} />
+                <TextField
+                    thickness="thin"
+                    value={this.state.childrenName}
+                    onChange={(a) => {
+                        this.setState({ childrenName: a });
+                    }}
+                    placeholder="Enter Category Name"
+                />
+                <BodyHeader thickness="thin" title={"Parent Id"} />
+                <TextField
+                    thickness="thin"
+                    title="Parent ID"
+                    readOnly={true}
+                    value={this.state.addChildrenData.marketplace_parent_id}
+                />
+                <BodyHeader thickness="thin" title={"Marketplace Name"} />
+                <TextField
+                    thickness="thin"
+                    readOnly={true}
+                    value={this.state.addChildrenData.marketplace}
+                />
+                <Button
+                    onClick={() => {
+                        this.updateChild(this.state.childrenName);
+                    }}
+                >
+                    Add
+        </Button>
+            </>
+        );
+    };
 
     renderCedcommerceCategory = () => {
         return (
@@ -616,7 +615,7 @@ export default class Home extends Component {
                             options={this.options("google")}
                             value={this.state.next_levelGoogle}
                         />
-                        {/* <Button onClick={() => this.addChildren()}>Add Child</Button> */}
+                        <Button onClick={() => this.addChildren()}>Add Child</Button>
                     </FlexLayout>
                 </div>
 
@@ -674,13 +673,13 @@ export default class Home extends Component {
                                             );
                                         }}
                                     />
-                                    {/* <Button
+                                    <Button
                                         onClick={() => {
                                             this.addChildren(this.state.google[a], this.state.value[a]);
                                         }}
                                     >
                                         Add Child
-                  </Button> */}
+                  </Button>
 
 
                                 </FlexLayout>
@@ -781,7 +780,7 @@ export default class Home extends Component {
                         <BodyHeader title={"Search"} />
                         {this.renderSearch()}
                     </Card>
-                    {/* <Modal
+                    <Modal
                         open={this.state.childModal}
                         close={() => {
                             this.setState({ childModal: false });
@@ -797,8 +796,8 @@ export default class Home extends Component {
                                 }}
                             ></Toast>
                         )}
-                    </Modal> */}
-                    {/* <Amazon></Amazon> */}
+                    </Modal>
+                    <Amazon></Amazon>
                 </div>
             </>
         );
