@@ -90,6 +90,7 @@ export default class Attribute extends Component {
         super(props)
 
         this.state = {
+            data: {}
 
         }
     }
@@ -99,13 +100,83 @@ export default class Attribute extends Component {
 
 
     componentDidMount() {
+        fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json").then(res => res.json())
+            .then(data => {
+                this.setState({
+                    data: data
+                })
+            })
         this.fetchAttribute()
     }
 
 
     fetchAttribute() {
+        let temp = []
         fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/total_attribute.json").then(resp => resp.json())
-            .then(data => console.log(data))
+            .then(data => {
+                Object.keys(data).map((key) => {
+
+
+                    // console.log(data[key])
+                    data[key]['all'].forEach(item => {
+                        if (data[key]['required'].includes(item)) {
+                            temp.push({
+
+                                // "name": "category name",
+                                "code": key,
+                                "marketplace": 'MercadoLibre',
+                                "marketplace_attribute_id": item,
+                                "category_id": 1,
+                                "type": "string",
+                                // "value": {
+                                //     "red": "REDIS BLUE",
+                                //     "green": "green"
+                                // },
+                                "required": 1,
+                                "sort_order": "1",
+                                "mapping": {}
+                            })
+                        } else {
+                            temp.push({
+                                // "name": "category name",
+                                "code": key,
+                                "marketplace": 'MercadoLibre',
+                                "marketplace_attribute_id": item,
+                                "category_id": 1,
+                                "type": "string",
+                                // "value": {
+                                //     "red": "REDIS BLUE",
+                                //     "green": "green"
+                                // },
+                                "required": 0,
+                                "sort_order": "1",
+                                "mapping": {}
+                            })
+                        }
+                    })
+                })
+
+                temp.forEach(a => {
+                    Object.keys(this.state.data).map((key) => {
+                        // console.log(this.state.data[key])
+                        // console.log(key)
+                        console.log(a.code)
+                        // if (key == a.code) {
+                        //     // temp[a]["name"] = this.state.data[key].name
+                        //     temp[a] = {
+                        //         ...temp[a],
+                        //         name: this.state.data[key].name
+                        //     }
+                        // let some = { ...temp[a] }
+                        // some['name'] = this.state.data[key].name
+                        // temp[a] = some
+
+                        // }
+                    })
+                })
+                // console.log(temp)
+
+            })
 
     }
     render() {
