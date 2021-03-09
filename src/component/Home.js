@@ -13,6 +13,7 @@ import "@cedcommerce/ounce-ui/dist/index.css";
 import DataTable from "./DataTable";
 import update from "./function";
 import Amazon from './amazon'
+import Attribute from "./Attribute"
 
 export default class Home extends Component {
     constructor(props) {
@@ -485,6 +486,7 @@ export default class Home extends Component {
         // console.log(data)
         // console.log(key)
 
+
         let temp = {}
         data.forEach(item => {
             if (item['next_level'].$oid == key) {
@@ -615,7 +617,7 @@ export default class Home extends Component {
                             options={this.options("google")}
                             value={this.state.next_levelGoogle}
                         />
-                        <Button onClick={() => this.addChildren()}>Add Child</Button>
+                        {/* <Button onClick={() => this.addChildren()}>Add Child</Button> */}
                     </FlexLayout>
                 </div>
 
@@ -797,7 +799,8 @@ export default class Home extends Component {
                             ></Toast>
                         )}
                     </Modal>
-                    <Amazon></Amazon>
+                    {/* <Amazon></Amazon> */}
+                    <Attribute></Attribute>
                 </div>
             </>
         );
