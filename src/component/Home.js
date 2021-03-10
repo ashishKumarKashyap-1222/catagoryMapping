@@ -773,8 +773,8 @@ export default class Home extends Component {
                         valign="none"
                         wrap="none"
                     >
-                        {/* {this.renderCedcommerceCategory()}
-                        {this.renderMarketplaceCategory()} */}
+                        {this.renderCedcommerceCategory()}
+                        {this.renderMarketplaceCategory()}
 
                     </FlexLayout>
                 </Card>

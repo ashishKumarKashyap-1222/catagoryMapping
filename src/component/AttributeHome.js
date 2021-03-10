@@ -6,6 +6,7 @@ import {
     TextField,
     BodyHeader,
     PageLoader,
+    ChoiceList,
 } from "@cedcommerce/ounce-ui";
 
 export default class AttributeHome extends Component {
@@ -222,15 +223,31 @@ export default class AttributeHome extends Component {
         );
     };
     renderMarketplaceAttribute = () => {
+        let option = [
+            { label: "as", value: "1" },
+            { label: "asd", value: "2" },
+            { label: "ads", value: "3" },
+            { label: "ads", value: "4" },
+            { label: "asv", value: "5" },
+            { label: "ags", value: "6" },
+            { label: "ass", value: "7" },
+            { label: "ags", value: "8" },
+            { label: "ajs", value: "9" },
+        ]
         return (
-            <FlexLayout
-                childWidth="fullWidth"
-                direction="none"
-                halign="fill"
-                spacing="loose"
-            >
-                <Select placeholder="Choose Attribute"></Select>
-            </FlexLayout>
+            <>
+
+                <FlexLayout
+                    childWidth="fullWidth"
+                    direction="none"
+                    halign="fill"
+                    spacing="loose"
+                >
+
+                    {/* <Select placeholder="Choose Attribute"></Select> */}
+                    <ChoiceList placeholder='choose' options={option} value={["1", "2"]} />
+                </FlexLayout>
+            </>
         );
     };
     render() {
@@ -246,9 +263,12 @@ export default class AttributeHome extends Component {
                 {this.state.loadingPage && <PageLoader />}
                 <FlexLayout halign="start" spacing="loose">
                     {this.renderCedcommerceCategory()}
+
                 </FlexLayout>
                 <FlexLayout halign="start" spacing="loose">
                     {this.renderCedcommerceAttribute()}
+                    {this.renderMarketplaceAttribute()}
+
                 </FlexLayout>
             </Card>
         );
