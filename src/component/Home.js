@@ -14,6 +14,7 @@ import DataTable from "./DataTable";
 import update from "./function";
 import Amazon from './amazon'
 import Attribute from "./Attribute"
+import EbayAttributes from "./EbayAttributes"
 
 export default class Home extends Component {
     constructor(props) {
@@ -800,7 +801,8 @@ export default class Home extends Component {
                         )}
                     </Modal>
                     {/* <Amazon></Amazon> */}
-                    <Attribute></Attribute>
+                    {/* <Attribute></Attribute> */}
+                    <EbayAttributes></EbayAttributes>
                 </div>
             </>
         );
