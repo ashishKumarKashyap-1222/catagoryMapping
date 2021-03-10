@@ -156,12 +156,15 @@ export default class Attribute extends Component {
                     })
                 })
 
+                let list=[]
                 temp.forEach(a => {
+                    // console.log(a)
                     Object.keys(this.state.data).map((key) => {
                         // console.log(this.state.data[key])
                         // console.log(key)
-                        console.log(a.code)
-                        // if (key == a.code) {
+                        // console.log(a.code)
+                        if (key == a.code) {
+                            list.push({...a,name:this.state.data[key].name})
                         //     // temp[a]["name"] = this.state.data[key].name
                         //     temp[a] = {
                         //         ...temp[a],
@@ -171,10 +174,10 @@ export default class Attribute extends Component {
                         // some['name'] = this.state.data[key].name
                         // temp[a] = some
 
-                        // }
+                        }
                     })
                 })
-                // console.log(temp)
+                console.log(JSON.stringify(list))
 
             })
 
