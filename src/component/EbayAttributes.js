@@ -65,7 +65,7 @@ export default class EbayAttributes extends Component {
                 })
 
             })
-        console.log(FinalData)
+        console.log(JSON.stringify(FinalData))
         console.log("FinalData", FinalData.length)
     }
 

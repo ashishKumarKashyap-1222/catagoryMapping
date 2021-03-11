@@ -244,8 +244,9 @@ export default class AttributeHome extends Component {
                     spacing="loose"
                 >
 
-                    {/* <Select placeholder="Choose Attribute"></Select> */}
-                    <ChoiceList placeholder='choose' options={option} value={["1", "2"]} />
+                    <ChoiceList placeholder='choose' options={option} value={["1", "2"]} onChange={(a) => {
+                        console.log(a)
+                    }} />
                 </FlexLayout>
             </>
         );

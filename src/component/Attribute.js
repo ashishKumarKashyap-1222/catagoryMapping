@@ -103,42 +103,18 @@ export default class Attribute extends Component {
 
         fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json").then(res => res.json())
             .then(data => {
+                // console.log(data)
 
-                console.log(data)
-                // this.setState({
-                //     data: data
-                // }, () => this.fetchOID())
-                let flag = true
-                if (flag == true) {
-                    Object.keys(data).map(async (key) => {
-                        flag = false
-                        await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[marketplace_id]=${key}`, {
-                            method: "get",
-                            headers: {
-                                authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg "
-                            }
-                        }).then(res => res.json())
-                            .then(data => {
-                                let temp = this.state.data
-                                temp.push(data.data[0])
-                                this.setState({
-                                    data: temp
-                                }, () => { flag = true })
-                            })
+                this.setState({
+                    data: data
+                }, () => { this.fetchAttribute() })
 
-                    })
 
-                }
-                console.log(this.state.data)
 
 
             })
         // console.log(fullData)
 
-        // this.setState({
-        //     data: fullData
-        // }, () => { console.log(this.state.data) })
-        // this.fetchAttribute()
     }
 
 
@@ -147,79 +123,103 @@ export default class Attribute extends Component {
 
 
 
-    // fetchAttribute() {
-    //     let temp = []
-    //     fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/total_attribute.json").then(resp => resp.json())
-    //         .then(data => {
-    //             Object.keys(data).map((key) => {
+    fetchAttribute() {
+        let temp = []
+        fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/total_attribute.json").then(resp => resp.json())
+            .then(data => {
+                Object.keys(data).map((key) => {
 
 
-    //                 // console.log(data[key])
-    //                 data[key]['all'].forEach(item => {
-    //                     if (data[key]['required'].includes(item)) {
-    //                         temp.push({
+                    // console.log(data[key])
+                    data[key]['all'].forEach(item => {
+                        if (data[key]['required'].includes(item)) {
+                            temp.push({
 
-    //                             // "name": "category name",
-    //                             "code": key,
-    //                             "marketplace": 'MercadoLibre',
-    //                             "marketplace_attribute_id": item,
-    //                             "category_id": 1,
-    //                             "type": "string",
-    //                             // "value": {
-    //                             //     "red": "REDIS BLUE",
-    //                             //     "green": "green"
-    //                             // },
-    //                             "required": 1,
-    //                             "sort_order": "1",
-    //                             "mapping": {}
-    //                         })
-    //                     } else {
-    //                         temp.push({
-    //                             // "name": "category name",
-    //                             "code": key,
-    //                             "marketplace": 'MercadoLibre',
-    //                             "marketplace_attribute_id": item,
-    //                             "category_id": 1,
-    //                             "type": "string",
-    //                             // "value": {
-    //                             //     "red": "REDIS BLUE",
-    //                             //     "green": "green"
-    //                             // },
-    //                             "required": 0,
-    //                             "sort_order": "1",
-    //                             "mapping": {}
-    //                         })
-    //                     }
-    //                 })
-    //             })
+                                // "name": "category name",
+                                "code": key,
+                                "marketplace": 'MercadoLibre',
+                                "marketplace_attribute_id": item,
+                                // "category_id": 1,
+                                "type": "string",
+                                // "value": {
+                                //     "red": "REDIS BLUE",
+                                //     "green": "green"
+                                // },
+                                "required": 1,
+                                "sort_order": "1",
+                                "mapping": {}
+                            })
+                        } else {
+                            temp.push({
+                                // "name": "category name",
+                                "code": key,
+                                "marketplace": 'MercadoLibre',
+                                "marketplace_attribute_id": item,
+                                // "category_id": 1,
+                                "type": "string",
+                                // "value": {
+                                //     "red": "REDIS BLUE",
+                                //     "green": "green"
+                                // },
+                                "required": 0,
+                                "sort_order": "1",
+                                "mapping": {}
+                            })
+                        }
+                    })
+                })
 
-    //             let list = []
-    //             // console.log(temp)
-    //             temp.forEach(a => {
-    //                 // console.log(a)
-    //                 Object.keys(this.state.data).map((key) => {
-    //                     // console.log(this.state.data[key])
-    //                     // console.log(key)
-    //                     // console.log(a.code)
-    //                     if (key == a.code) {
-    //                         list.push({ ...a, name: this.state.data[key].name })
-    //                         //     // temp[a]["name"] = this.state.data[key].name
-    //                         //     temp[a] = {
-    //                         //         ...temp[a],
-    //                         //         name: this.state.data[key].name
-    //                         //     }
-    //                         // let some = { ...temp[a] }
-    //                         // some['name'] = this.state.data[key].name
-    //                         // temp[a] = some
+                // let list = []
+                // console.log(temp)
+                // temp.forEach(a => {
+                //     // console.log(a)
+                //     Object.keys(this.state.data).map((key) => {
+                //         // console.log(this.state.data[key])
+                //         // console.log(key)
+                //         // console.log(a.code)
+                //         if (key == a.code) {
+                //             list.push({ ...a, name: this.state.data[key].name })
+                //             //     // temp[a]["name"] = this.state.data[key].name
+                //             //     temp[a] = {
+                //             //         ...temp[a],
+                //             //         name: this.state.data[key].name
+                //             //     }
+                //             // let some = { ...temp[a] }
+                //             // some['name'] = this.state.data[key].name
+                //             // temp[a] = some
 
-    //                     }
-    //                 })
-    //             })
-    //             console.log(JSON.stringify(list))
+                //         }
+                //     })
+                // })
+                console.log(temp)
+                this.nameAdd(temp)
 
-    //         })
+            })
 
-    // }
+    }
+    async nameAdd(list) {
+
+        let FinalData = []
+        await fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/attributes/main/allCategoriesashish.json").then(res => res.json())
+            .then(data => {
+                console.log(data)
+                console.log(data.length)
+                list.forEach(a => {
+                    data.forEach(val => {
+                        // console.log("data")
+
+
+                        // console.log(val)
+                        if (val.marketplace == "mercadolibre" && val.marketplace_id == a.code) {
+                            FinalData.push({ ...a, name: val.name, category_id: val['_id'].$oid })
+                        }
+                    })
+                })
+
+            })
+        console.log(JSON.stringify(FinalData))
+        // console.log("FinalData", FinalData.length)
+    }
     render() {
         return (
             <div>

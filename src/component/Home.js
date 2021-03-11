@@ -39,6 +39,7 @@ export default class Home extends Component {
             childrenName: "",
             childDataToast: false,
             childDataMessage: "",
+            ChildrenId: '',
             options: [
                 { value: "1", label: "google" },
                 { value: "2", label: "Ebay_UK" },
@@ -317,6 +318,7 @@ export default class Home extends Component {
                         childrenName: "",
                         childDataToast: false,
                         childDataMessage: "",
+                        ChildrenId: '',
                         options: [
                             { value: "1", label: "google" },
                             { value: "2", label: "Ebay_UK" },
@@ -486,21 +488,42 @@ export default class Home extends Component {
         // console.log(this.state.google)
         // console.log(data)
         // console.log(key)
-
-
         let temp = {}
-        data.forEach(item => {
-            if (item['next_level'].$oid == key) {
+        if (data) {
+            console.log("if")
 
-                temp = {
-                    marketplace_parent_id: item.marketplace_id,
-                    marketplace: item.marketplace,
-                    level: item.level + 1
-                };
-            }
-        })
+
+            data.forEach(item => {
+                if (item['next_level'].$oid == key) {
+                    temp = {
+                        marketplace_parent_id: item.marketplace_id,
+                        marketplace: item.marketplace,
+                        level: item.level + 1
+                    };
+                }
+            })
+
+        } else {
+            console.log("else")
+            console.log(this.state.google[0])
+            this.state.google[0].forEach(item => {
+                if (item['next_level'] == this.state.next_levelGoogle) {
+                    temp = {
+                        marketplace_parent_id: item.marketplace_id,
+                        marketplace: item.marketplace,
+                        level: item.level + 1
+                    };
+
+                }
+            })
+
+
+        }
+
+
 
         // let objects = data ?? temp;
+        console.log(temp)
 
         this.setState({
             childModal: true,
@@ -510,7 +533,9 @@ export default class Home extends Component {
     async updateChild(name) {
         if (name.length > 3) {
             let data = this.state.addChildrenData;
+            let Id = this.state.ChildrenId
             data["name"] = name;
+            data["marketplace_id"] = Id
             console.log(data);
             await fetch(
                 `http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategoryChild`,
@@ -576,6 +601,15 @@ export default class Home extends Component {
                     }}
                     placeholder="Enter Category Name"
                 />
+                <BodyHeader thickness="thin" title={"Id"} />
+                <TextField
+                    thickness="thin"
+                    value={this.state.ChildrenId}
+                    onChange={(a) => {
+                        this.setState({ ChildrenId: a });
+                    }}
+                    placeholder="Enter Category Name"
+                />
                 <BodyHeader thickness="thin" title={"Parent Id"} />
                 <TextField
                     thickness="thin"
@@ -618,7 +652,7 @@ export default class Home extends Component {
                             options={this.options("google")}
                             value={this.state.next_levelGoogle}
                         />
-                        {/* <Button onClick={() => this.addChildren()}>Add Child</Button> */}
+                        <Button onClick={() => this.addChildren()}>Add Child</Button>
                     </FlexLayout>
                 </div>
 
@@ -802,7 +836,7 @@ export default class Home extends Component {
                     </Modal>
                     {/* <Amazon></Amazon> */}
                     {/* <Attribute></Attribute> */}
-                    <EbayAttributes></EbayAttributes>
+                    {/* <EbayAttributes></EbayAttributes> */}
                 </div>
             </>
         );
