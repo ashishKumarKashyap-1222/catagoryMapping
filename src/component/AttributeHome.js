@@ -16,6 +16,12 @@ export default class AttributeHome extends Component {
         this.state = {
             loadingPage: false,
             cedcommerce: {},
+            options: [
+                { value: "1", label: "google" },
+                { value: "2", label: "Ebay_UK" },
+                { value: "3", label: "Ebay_AU" },
+                { value: '4', label: "mercadolibre" }
+            ],
         };
     }
 
@@ -35,7 +41,30 @@ export default class AttributeHome extends Component {
         return res.json();
     };
     componentDidMount() {
-        this.fetch();
+        this.storeMarketplace();
+    }
+    storeMarketplace() {
+        if (localStorage.getItem("MarketPlaceAttribute") != undefined) {
+            this.setState(
+                {
+                    marketPlace: JSON.parse(localStorage.getItem("MarketPlaceAttribute")),
+                },
+                () => {
+                    // this.props.marketplace(this.state.options[this.state.marketPlace - 1].label),
+                    this.fetch()
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    marketPlace: this.state.options[0].value,
+                },
+                () => {
+                    //  this.props.marketPlace(this.state.options[this.state.marketPlace - 1].label),
+                    this.fetch()
+                }
+            );
+        }
     }
 
     async fetch() {
@@ -236,7 +265,7 @@ export default class AttributeHome extends Component {
         ]
         return (
             <>
-
+                <BodyHeader title="Marketplace Attributes"></BodyHeader>
                 <FlexLayout
                     childWidth="fullWidth"
                     direction="none"
@@ -251,6 +280,10 @@ export default class AttributeHome extends Component {
             </>
         );
     };
+    handleChange1(value) {
+        localStorage.setItem("MarketPlaceAttribute", JSON.stringify(value));
+        this.setState({ marketPlace: value }, () => this.fetch());
+    }
     render() {
         return (
             <Card
@@ -261,14 +294,25 @@ export default class AttributeHome extends Component {
                     },
                 }}
             >
-                {this.state.loadingPage && <PageLoader />}
-                <FlexLayout halign="start" spacing="loose">
-                    {this.renderCedcommerceCategory()}
-
+                <FlexLayout halign="end">
+                    <Select
+                        thickness="thin"
+                        placeholder="select marketplace"
+                        value={this.state.marketPlace}
+                        options={this.state.options}
+                        onChange={(a) => {
+                            this.handleChange1(a);
+                        }}
+                    />
                 </FlexLayout>
-                <FlexLayout halign="start" spacing="loose">
-                    {this.renderCedcommerceAttribute()}
-                    {this.renderMarketplaceAttribute()}
+                {this.state.loadingPage && <PageLoader />}
+                <FlexLayout halign="fill" spacing="loose">
+                    <FlexLayout direction="vertical">
+                        {this.renderCedcommerceCategory()}
+                    </FlexLayout>
+                    <FlexLayout>
+                        {this.renderMarketplaceAttribute()}
+                    </FlexLayout>
 
                 </FlexLayout>
             </Card>
