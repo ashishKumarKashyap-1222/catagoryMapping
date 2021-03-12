@@ -22,13 +22,14 @@ export default class AttributeHome extends Component {
                 { value: "3", label: "Ebay_AU" },
                 { value: '4', label: "mercadolibre" }
             ],
+            marketPlace:""
         };
     }
 
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `https://c3b811e3f19d.ngrok.io/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
@@ -131,11 +132,14 @@ export default class AttributeHome extends Component {
         /**this function creates options for the select tag */
         if (this.state.cedcommerce[0] != undefined) {
             let options1 = [];
+            
             let a = this.state.cedcommerce[0];
             for (let i = 0; i < a.length; i++) {
+                // console.log(this.state.cedcommerce[0][i]["mapping"])
                 if (this.state.cedcommerce[0][i]["mapping"] != undefined) {
+                  
                     if (
-                        this.state.cedcommerce[0][i]["mapping"]["cedcommerce"] != undefined
+                        this.state.cedcommerce[0][i]["mapping"]["google"] != undefined
                     ) {
                         options1.push({
                             label: this.state.cedcommerce[0][i].name + `(Mapped)`,
@@ -159,6 +163,9 @@ export default class AttributeHome extends Component {
     }
 
     renderCedcommerceCategory = () => {
+        // console.log(this.state.options[this.state.marketPlace - 1].label)
+        // console.log(this.state.marketPlace)
+        let val = this.state.options[this.state.marketPlace - 1].label;
         return (
             <Card>
                 <BodyHeader title={"CedCommerce category"} />
@@ -179,13 +186,14 @@ export default class AttributeHome extends Component {
                 </div>
 
                 {Object.keys(this.state.cedcommerce).map((a, i) => {
+                    
                     var options1 = [];
 
                     if (a != 0) {
                         for (var i = 0; i < this.state.cedcommerce[a].length; i++) {
                             if (this.state.cedcommerce[a][i]["mapping"] != undefined) {
                                 if (
-                                    this.state.cedcommerce[a][i]["mapping"]["cedcommerce"] !=
+                                    this.state.cedcommerce[a][i]["mapping"][val] !=
                                     undefined
                                 ) {
                                     options1.push({
@@ -236,9 +244,16 @@ export default class AttributeHome extends Component {
                         );
                     }
                 })}
+                <div className="mt-20">
+
+              {  this.renderCedcommerceAttribute()}
+                </div>
             </Card>
         );
     };
+    
+
+
     renderCedcommerceAttribute = () => {
         return (
             <FlexLayout
@@ -247,7 +262,7 @@ export default class AttributeHome extends Component {
                 halign="fill"
                 spacing="loose"
             >
-                <Select placeholder="Choose Attribute"></Select>
+                <Select placeholder="Choose Attribute" disabled={true}></Select>
             </FlexLayout>
         );
     };
@@ -308,7 +323,7 @@ export default class AttributeHome extends Component {
                 {this.state.loadingPage && <PageLoader />}
                 <FlexLayout halign="fill" spacing="loose">
                     <FlexLayout direction="vertical">
-                        {this.renderCedcommerceCategory()}
+                        {this.state.marketPlace && this.renderCedcommerceCategory()}
                     </FlexLayout>
                     <FlexLayout>
                         {this.renderMarketplaceAttribute()}

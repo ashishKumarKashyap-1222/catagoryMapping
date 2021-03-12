@@ -53,7 +53,7 @@ export default class Home extends Component {
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `https://c3b811e3f19d.ngrok.io/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
@@ -202,7 +202,7 @@ export default class Home extends Component {
         if (Object.keys(this.state.google).length > 1) {
             this.state.google[a].forEach((temp) => {
                 if (temp.next_level["$oid"] == this.state.lastKeyGoogle) {
-                    finalData = temp;
+                    jj j = temp;
                 } else if (temp.next_level == this.state.lastKeyGoogle) {
                     finalData = temp;
                 }
@@ -570,12 +570,19 @@ export default class Home extends Component {
                                     lastKeyOther: "",
                                     value: {},
                                     valueOther: {},
-                                    selectedMarketplace: "Ebay_US",
                                     childModal: false,
                                     addChildrenData: {},
                                     childrenName: "",
                                     childDataToast: false,
                                     childDataMessage: "",
+                                    ChildrenId: '',
+                                    options: [
+                                        { value: "1", label: "google" },
+                                        { value: "2", label: "Ebay_UK" },
+                                        { value: "3", label: "Ebay_AU" },
+                                        { value: '4', label: "mercadolibre" }
+                                    ],
+                                    marketPlace: "",
                                 },
                                 () => {
                                     this.fetch();
