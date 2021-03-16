@@ -15,6 +15,7 @@ import update from "./function";
 import Amazon from './amazon'
 import Attribute from "./Attribute"
 import EbayAttributes from "./EbayAttributes"
+const Token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q"
 
 export default class Home extends Component {
     constructor(props) {
@@ -53,11 +54,11 @@ export default class Home extends Component {
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `https://c3b811e3f19d.ngrok.io/ebay/home/public/connector/` + url,
+            `http://192.168.0.222/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
-                    Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+                    Authorization: Token,
                 },
             }
         );
@@ -202,7 +203,7 @@ export default class Home extends Component {
         if (Object.keys(this.state.google).length > 1) {
             this.state.google[a].forEach((temp) => {
                 if (temp.next_level["$oid"] == this.state.lastKeyGoogle) {
-                    jj j = temp;
+                    finalData = temp;
                 } else if (temp.next_level == this.state.lastKeyGoogle) {
                     finalData = temp;
                 }
@@ -490,7 +491,6 @@ export default class Home extends Component {
         // console.log(key)
         let temp = {}
         if (data) {
-            console.log("if")
 
 
             data.forEach(item => {
@@ -520,11 +520,6 @@ export default class Home extends Component {
 
         }
 
-
-
-        // let objects = data ?? temp;
-        console.log(temp)
-
         this.setState({
             childModal: true,
             addChildrenData: temp,
@@ -544,8 +539,7 @@ export default class Home extends Component {
                     body: JSON.stringify([data]),
                     headers: {
                         "Content-Type": "application/json",
-                        authorization:
-                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0MzU0MDg4OCwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTIwMDQ4ODh9.ZXKtyIxaT9eliUpKmluIenZnNI1A8dishJ5pLavOROhwJAfGKODuFN81-xVJBBO46HljmsHc1fmWp7wt6IKlBikKPigQrfOswZ245QlURYK20iJQvyrGJJ0tv2x8n0YSxEBfFiSfhtry21JyueInJ_SipiXfUjXdm0g21DA5gtv7Z9KkTP4eDqY4vX1fmn3BXZvs0efQuUWK5swVP2wEsxPJU9LoOshwkqP7qd7HgbF3WWxSySnUyTqgdwPdHeId2A-gk86rbZNt-Z9V4hakDBnTmTmjcJqIS2J45U2tj0Fpd9ik5i6b0FPA591DsYZalAZIuRuWEZCL01ta1Mi_Wg",
+                        authorization: Token,
                     },
                 }
             )
@@ -659,7 +653,7 @@ export default class Home extends Component {
                             options={this.options("google")}
                             value={this.state.next_levelGoogle}
                         />
-                        <Button onClick={() => this.addChildren()}>Add Child</Button>
+                        {/* <Button onClick={() => this.addChildren()}>Add Child</Button> */}
                     </FlexLayout>
                 </div>
 
@@ -717,13 +711,13 @@ export default class Home extends Component {
                                             );
                                         }}
                                     />
-                                    <Button
+                                    {/* <Button
                                         onClick={() => {
                                             this.addChildren(this.state.google[a], this.state.value[a]);
                                         }}
                                     >
                                         Add Child
-                  </Button>
+                  </Button> */}
 
 
                                 </FlexLayout>
