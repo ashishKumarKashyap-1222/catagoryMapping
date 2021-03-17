@@ -27,7 +27,10 @@ export default class AttributeHome extends Component {
             optionCedAttributes: [],
             attribute: "",
             MappedData: {},
+            flag: false,
+            options1: [],
             valueMulti: [],
+            dataCedAttri: []
         };
     }
 
@@ -81,8 +84,6 @@ export default class AttributeHome extends Component {
             });
 
             this.setState({
-                // previouscedcommerce: a,
-                // next_levelcedcommerce: e.data[0].next_level,
                 cedcommerce: a,
             });
         });
@@ -104,6 +105,7 @@ export default class AttributeHome extends Component {
         this.setState({
             MappedData: object,
         });
+
         let value = object["next_level"].$oid ?? object["next_level"];
         await fetch(
             `http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=cedcommerce&category_id=${value}`,
@@ -118,6 +120,7 @@ export default class AttributeHome extends Component {
             .then((response) => response.json())
             .then((data) => {
                 if (data.data.length > 0) {
+                    this.setState({ dataCedAttri: data.data })
                     let optionCedAttributes = [];
                     data.data.forEach((item) => {
                         optionCedAttributes.push({
@@ -315,7 +318,7 @@ export default class AttributeHome extends Component {
                             options={this.state.optionCedAttributes}
                         />
                         <div className="mt-10">
-                            <Button primary onClick={this.getAttributes()}>
+                            <Button primary onClick={() => this.getAttributes()}>
                                 Get Attributes
               </Button>
                         </div>
@@ -324,85 +327,111 @@ export default class AttributeHome extends Component {
             </FlexLayout>
         );
     };
-    getAttributes() { }
-
-    renderMarketplaceAttribute = () => {
+    getAttributes() {
+        let option = [];
+        this.setState({ flag: true })
         if (this.state.MappedData["mapping"]) {
-            if (
-                this.state.MappedData["mapping"][
-                this.state.options[this.state.marketPlace - 1].label
-                ]
-            ) {
-                // console.log(
-                //     this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]);
-                if (
-                    typeof (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) == "object") {
+            if (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) {
+                if (typeof (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) == "object") {
+
                     this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label].forEach(async (item) => {
-                        console.log(item)
-                        await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[mapping][${this.state.options[this.state.marketPlace - 1].label}]=${item}`, {
+                        await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=${this.state.options[this.state.marketPlace - 1].label}&category_id=${item}`, {
                             method: "get",
                             headers: {
                                 authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q",
                             }
                         }).then(res => res.json())
-                            .then(data => { console.log(data) })
-
-
+                            .then(data => {
+                                // console.log(data.data)
+                                data.data.forEach(value => {
+                                    option.push({
+                                        label: value.marketplace_attribute_id,
+                                        value: value["_id"].$oid
+                                    })
+                                })
+                                this.setState({
+                                    options1: option
+                                })
+                            })
                     });
+
                 }
             }
         }
+    }
 
-        let option = [
-            { label: "as", value: "1" },
-            { label: "asd", value: "2" },
-            { label: "ads", value: "3" },
-            { label: "ads", value: "4" },
-            { label: "asv", value: "5" },
-            { label: "ags", value: "6" },
-            { label: "ass", value: "7" },
-            { label: "ags", value: "8" },
-            { label: "ajs", value: "9" },
-        ];
+    renderMarketplaceAttribute = () => {
 
-        return (
-            <>
-                <BodyHeader title="Marketplace Attributes"></BodyHeader>
-                <FlexLayout
-                    childWidth="fullWidth"
-                    direction="none"
-                    halign="fill"
-                    spacing="loose"
-                >
-                    <ChoiceList
-                        placeholder="choose"
-                        options={option}
-                        value={this.state.valueMulti}
-                        onChange={(a) => {
-                            console.log(a);
-                            if (this.state.valueMulti.includes(a)) {
-                                let temp = this.state.valueMulti;
-                                let index = temp.indexOf(a);
-                                temp.splice(index, 1);
-                                this.setState({
-                                    valueMulti: temp,
-                                });
-                            } else {
-                                let temp = this.state.valueMulti;
-                                temp.push(a);
-                                this.setState({
-                                    valueMulti: temp,
-                                });
-                            }
-                        }}
-                    />
-                </FlexLayout>
-            </>
-        );
+        if (this.state.flag && this.state.options1.length > 0) {
+            let options = this.state.options1
+
+            return (
+                <>
+                    <BodyHeader title="Marketplace Attributes"></BodyHeader>
+                    <FlexLayout
+                        childWidth="fullWidth"
+                        direction="none"
+                        halign="fill"
+                        spacing="loose"
+                    >
+                        <ChoiceList
+                            placeholder="choose"
+                            options={options}
+                            value={this.state.valueMulti}
+                            onChange={(a) => {
+                                // console.log(a);
+                                if (this.state.valueMulti.includes(a)) {
+                                    let temp = this.state.valueMulti;
+                                    let index = temp.indexOf(a);
+                                    temp.splice(index, 1);
+                                    this.setState({
+                                        valueMulti: temp,
+                                    });
+                                } else {
+                                    let temp = this.state.valueMulti;
+                                    temp.push(a);
+                                    this.setState({
+                                        valueMulti: temp,
+                                    });
+                                }
+                            }}
+                        />
+                    </FlexLayout>
+                </>
+            );
+
+
+        }
+
+
+
+
     };
     handleChange1(value) {
         localStorage.setItem("MarketPlaceAttribute", JSON.stringify(value));
         this.setState({ marketPlace: value }, () => this.fetch());
+    }
+    onSubmit() {
+        let object = {}
+        let value = this.state.options[this.state.marketPlace - 1].label
+        // console.log("object")
+        // console.log(this.state.valueMulti)
+        // console.log(this.state.attribute)
+        // console.log(this.state.dataCedAttri)
+        this.state.dataCedAttri.forEach(item => {
+            if (item["_id"].$oid == this.state.attribute) {
+                object = item
+            }
+        })
+        let mapping = {}
+        mapping[value] = this.state.valueMulti
+        object["mapping"] = mapping
+        console.log(object)
+
+
+
+
+
     }
     render() {
         return (
@@ -431,7 +460,7 @@ export default class AttributeHome extends Component {
                         {this.state.marketPlace && this.renderCedcommerceCategory()}
                     </FlexLayout>
                     <FlexLayout>
-                        {Object.keys(this.state.MappedData).length > 0 &&
+                        {this.state.flag &&
                             this.renderMarketplaceAttribute()}
                     </FlexLayout>
                 </FlexLayout>
