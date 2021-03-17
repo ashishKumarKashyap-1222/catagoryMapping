@@ -54,7 +54,7 @@ export default class Home extends Component {
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `https://e4c557978080.ngrok.io/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {

@@ -37,7 +37,7 @@ export default class AttributeHome extends Component {
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `https://e4c557978080.ngrok.io/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {
@@ -108,7 +108,7 @@ export default class AttributeHome extends Component {
 
         let value = object["next_level"].$oid ?? object["next_level"];
         await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=cedcommerce&category_id=${value}`,
+            `https://e4c557978080.ngrok.io/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=cedcommerce&category_id=${value}`,
             {
                 method: "GET",
                 headers: {
@@ -294,20 +294,26 @@ export default class AttributeHome extends Component {
                         );
                     }
                 })}
-                <div className="mt-20">{this.renderCedcommerceAttribute()}</div>
+                <div className="mt-20">{this.state.optionCedAttributes.length > 0 && this.renderCedcommerceAttribute()}</div>
             </Card>
         );
     };
 
     renderCedcommerceAttribute = () => {
         return (
+            <>
+             <BodyHeader title={"Cedcommerce Attributes"} />
+             <div className='mt-20'>
+         
+
             <FlexLayout
                 childWidth="fullWidth"
                 direction="none"
                 halign="fill"
                 spacing="loose"
             >
-                {this.state.optionCedAttributes.length > 0 && (
+              
+                { (
                     <>
                         <Select
                             placeholder="Choose Attribute"
@@ -325,6 +331,9 @@ export default class AttributeHome extends Component {
                     </>
                 )}
             </FlexLayout>
+                    
+            </div>
+            </>
         );
     };
     getAttributes() {
@@ -335,7 +344,7 @@ export default class AttributeHome extends Component {
                 if (typeof (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) == "object") {
 
                     this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label].forEach(async (item) => {
-                        await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=${this.state.options[this.state.marketPlace - 1].label}&category_id=${item}`, {
+                        await fetch(`https://e4c557978080.ngrok.io/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=${this.state.options[this.state.marketPlace - 1].label}&category_id=${item}`, {
                             method: "get",
                             headers: {
                                 authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q",
