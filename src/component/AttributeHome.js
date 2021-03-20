@@ -8,6 +8,9 @@ import {
     ChoiceList,
     Button,
 } from "@cedcommerce/ounce-ui";
+import CopyOfAttributeHome from "./CopyOfAttributeHome";
+const token =
+    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q";
 
 export default class AttributeHome extends Component {
     constructor(props) {
@@ -22,7 +25,6 @@ export default class AttributeHome extends Component {
                 { value: "3", label: "Ebay_AU" },
                 { value: "4", label: "mercadolibre" },
             ],
-            marketPlace: "",
             lastKeyCedcommerce: "",
             optionCedAttributes: [],
             attribute: "",
@@ -30,7 +32,7 @@ export default class AttributeHome extends Component {
             flag: false,
             options1: [],
             valueMulti: [],
-            dataCedAttri: []
+            dataCedAttri: [],
         };
     }
 
@@ -41,8 +43,7 @@ export default class AttributeHome extends Component {
             {
                 method: "get",
                 headers: {
-                    Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q",
+                    Authorization: token,
                 },
             }
         );
@@ -59,7 +60,6 @@ export default class AttributeHome extends Component {
                     marketPlace: JSON.parse(localStorage.getItem("MarketPlaceAttribute")),
                 },
                 () => {
-                    // this.props.marketplace(this.state.options[this.state.marketPlace - 1].label),
                     this.fetch();
                 }
             );
@@ -69,7 +69,6 @@ export default class AttributeHome extends Component {
                     marketPlace: this.state.options[0].value,
                 },
                 () => {
-                    //  this.props.marketPlace(this.state.options[this.state.marketPlace - 1].label),
                     this.fetch();
                 }
             );
@@ -112,15 +111,14 @@ export default class AttributeHome extends Component {
             {
                 method: "GET",
                 headers: {
-                    authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q",
+                    authorization: token,
                 },
             }
         )
             .then((response) => response.json())
             .then((data) => {
                 if (data.data.length > 0) {
-                    this.setState({ dataCedAttri: data.data })
+                    this.setState({ dataCedAttri: data.data });
                     let optionCedAttributes = [];
                     data.data.forEach((item) => {
                         optionCedAttributes.push({
@@ -194,7 +192,6 @@ export default class AttributeHome extends Component {
 
             let a = this.state.cedcommerce[0];
             for (let i = 0; i < a.length; i++) {
-                // console.log(this.state.cedcommerce[0][i]["mapping"])
                 if (this.state.cedcommerce[0][i]["mapping"] != undefined) {
                     if (this.state.cedcommerce[0][i]["mapping"]["google"] != undefined) {
                         options1.push({
@@ -294,7 +291,10 @@ export default class AttributeHome extends Component {
                         );
                     }
                 })}
-                <div className="mt-20">{this.state.optionCedAttributes.length > 0 && this.renderCedcommerceAttribute()}</div>
+                <div className="mt-20">
+                    {this.state.optionCedAttributes.length > 0 &&
+                        this.renderCedcommerceAttribute()}
+                </div>
             </Card>
         );
     };
@@ -303,17 +303,14 @@ export default class AttributeHome extends Component {
         return (
             <>
                 <BodyHeader title={"Cedcommerce Attributes"} />
-                <div className='mt-20'>
-
-
+                <div className="mt-20">
                     <FlexLayout
                         childWidth="fullWidth"
                         direction="none"
                         halign="fill"
                         spacing="loose"
                     >
-
-                        {(
+                        {
                             <>
                                 <Select
                                     placeholder="Choose Attribute"
@@ -326,56 +323,67 @@ export default class AttributeHome extends Component {
                                 <div className="mt-10">
                                     <Button primary onClick={() => this.getAttributes()}>
                                         Get Attributes
-              </Button>
+                  </Button>
                                 </div>
                             </>
-                        )}
+                        }
                     </FlexLayout>
-
                 </div>
             </>
         );
     };
     getAttributes() {
         let option = [];
-        this.setState({ flag: true })
+        this.setState({ flag: true });
         if (this.state.MappedData["mapping"]) {
-            if (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) {
-                if (typeof (this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label]) == "object") {
-
-                    this.state.MappedData["mapping"][this.state.options[this.state.marketPlace - 1].label].forEach(async (item) => {
-                        await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=${this.state.options[this.state.marketPlace - 1].label}&category_id=${item}`, {
-                            method: "get",
-                            headers: {
-                                authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q",
+            if (
+                this.state.MappedData["mapping"][
+                this.state.options[this.state.marketPlace - 1].label
+                ]
+            ) {
+                if (
+                    typeof this.state.MappedData["mapping"][
+                    this.state.options[this.state.marketPlace - 1].label
+                    ] == "object"
+                ) {
+                    this.state.MappedData["mapping"][
+                        this.state.options[this.state.marketPlace - 1].label
+                    ].forEach(async (item) => {
+                        await fetch(
+                            `http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=${this.state.options[this.state.marketPlace - 1].label
+                            }&category_id=${item}`,
+                            {
+                                method: "get",
+                                headers: {
+                                    authorization: token,
+                                },
                             }
-                        }).then(res => res.json())
-                            .then(data => {
+                        )
+                            .then((res) => res.json())
+                            .then((data) => {
                                 // console.log(data.data)
-                                data.data.forEach(value => {
+                                data.data.forEach((value) => {
                                     option.push({
                                         label: value.marketplace_attribute_id,
-                                        value: value["_id"].$oid
-                                    })
-                                })
+                                        value: value["_id"].$oid,
+                                    });
+                                });
                                 this.setState({
-                                    options1: option
-                                })
-                            })
+                                    options1: option,
+                                });
+                            });
                     });
-
                 }
             }
         }
     }
 
     renderMarketplaceAttribute = () => {
-
         if (this.state.flag && this.state.options1.length > 0) {
-            let options = this.state.options1
+            let options = this.state.options1;
 
             return (
-                <div className='mt-20'>
+                <div className="mt-20">
                     <BodyHeader title="Marketplace Attributes"></BodyHeader>
                     <FlexLayout
                         childWidth="fullWidth"
@@ -383,7 +391,7 @@ export default class AttributeHome extends Component {
                         halign="fill"
                         spacing="loose"
                     >
-                        <div className='mt-30'>
+                        <div className="mt-30">
                             <ChoiceList
                                 placeholder="choose"
                                 options={options}
@@ -408,54 +416,44 @@ export default class AttributeHome extends Component {
                             />
                         </div>
                     </FlexLayout>
-
                 </div>
             );
-
-
         }
-
-
-
-
     };
+
     handleChange1(value) {
         localStorage.setItem("MarketPlaceAttribute", JSON.stringify(value));
         this.setState({ marketPlace: value }, () => this.fetch());
     }
+
     onSubmit() {
-        let object = {}
-        let value = this.state.options[this.state.marketPlace - 1].label
+        let object = {};
+        let value = this.state.options[this.state.marketPlace - 1].label;
         // console.log("object")
         // console.log(this.state.valueMulti)
         // console.log(this.state.attribute)
         // console.log(this.state.dataCedAttri)
-        this.state.dataCedAttri.forEach(item => {
+        this.state.dataCedAttri.forEach((item) => {
             if (item["_id"].$oid == this.state.attribute) {
-                object = item
+                object = item;
             }
-        })
-        let mapping = {}
-        mapping[value] = this.state.valueMulti
-        object["mapping"] = mapping
-        console.log(object)
-
-
-
-
-
+        });
+        let mapping = {};
+        mapping[value] = this.state.valueMulti;
+        object["mapping"] = mapping;
+        console.log(object);
     }
     render() {
         return (
             <Card
-                primaryAction={{
-                    content: "Submit",
-                    onClick: () => {
-                        this.onSubmit();
-                    },
-                }}
+            // primaryAction={{
+            //     content: "Submit",
+            //     onClick: () => {
+            //         this.onSubmit();
+            //     },
+            // }}
             >
-                <FlexLayout halign="end">
+                {/* <FlexLayout halign="end">
                     <Select
                         thickness="thin"
                         placeholder="select marketplace"
@@ -475,7 +473,8 @@ export default class AttributeHome extends Component {
                         {this.state.flag &&
                             this.renderMarketplaceAttribute()}
                     </FlexLayout>
-                </FlexLayout>
+                </FlexLayout> */}
+                <CopyOfAttributeHome></CopyOfAttributeHome>
             </Card>
         );
     }
