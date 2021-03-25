@@ -99,7 +99,6 @@ export default class Attribute extends Component {
 
 
     componentDidMount() {
-        let fullData = []
 
         fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json").then(res => res.json())
             .then(data => {

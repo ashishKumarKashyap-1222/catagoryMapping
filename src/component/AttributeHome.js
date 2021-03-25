@@ -8,7 +8,8 @@ import {
     ChoiceList,
     Button,
 } from "@cedcommerce/ounce-ui";
-import CopyOfAttributeHome from "./CopyOfAttributeHome";
+import Attribute_search from "./Attribute_search"
+import FacebookCode from "./facebookCode"
 const token =
     "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q";
 
@@ -25,6 +26,7 @@ export default class AttributeHome extends Component {
                 { value: "3", label: "Ebay_AU" },
                 { value: "4", label: "mercadolibre" },
             ],
+            value: {},
             lastKeyCedcommerce: "",
             optionCedAttributes: [],
             attribute: "",
@@ -50,6 +52,11 @@ export default class AttributeHome extends Component {
         this.setState({ loadingPage: false });
         return res.json();
     };
+
+    handleChange1(value) {
+        localStorage.setItem("MarketPlaceAttribute", JSON.stringify(value));
+        this.setState({ marketPlace: value }, () => this.fetch());
+    }
     componentDidMount() {
         this.storeMarketplace();
     }
@@ -81,56 +88,12 @@ export default class AttributeHome extends Component {
             e.data.forEach((item) => {
                 a[item.level] = e.data;
             });
+            // console.log(a)
 
             this.setState({
                 cedcommerce: a,
             });
         });
-    }
-    async attributeCheak() {
-        let object = {};
-        Object.keys(this.state.cedcommerce).map((a) => {
-            this.state.cedcommerce[a].forEach((item) => {
-                if (
-                    item.level != 0 &&
-                    item["next_level"].$oid == this.state.lastKeyCedcommerce
-                ) {
-                    object = item;
-                } else if (item["next_level"] == this.state.lastKeyCedcommerce) {
-                    object = item;
-                }
-            });
-        });
-        this.setState({
-            MappedData: object,
-        });
-
-        let value = object["next_level"].$oid ?? object["next_level"];
-        await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=cedcommerce&category_id=${value}`,
-            {
-                method: "GET",
-                headers: {
-                    authorization: token,
-                },
-            }
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.data.length > 0) {
-                    this.setState({ dataCedAttri: data.data });
-                    let optionCedAttributes = [];
-                    data.data.forEach((item) => {
-                        optionCedAttributes.push({
-                            label: item["marketplace_attribute_id"],
-                            value: item["_id"].$oid,
-                        });
-                    });
-                    this.setState({
-                        optionCedAttributes: optionCedAttributes,
-                    });
-                }
-            });
     }
     handleChange(e) {
         this.setState(
@@ -185,35 +148,6 @@ export default class AttributeHome extends Component {
             });
         });
     }
-    options() {
-        /**this function creates options for the select tag */
-        if (this.state.cedcommerce[0] != undefined) {
-            let options1 = [];
-
-            let a = this.state.cedcommerce[0];
-            for (let i = 0; i < a.length; i++) {
-                if (this.state.cedcommerce[0][i]["mapping"] != undefined) {
-                    if (this.state.cedcommerce[0][i]["mapping"]["google"] != undefined) {
-                        options1.push({
-                            label: this.state.cedcommerce[0][i].name + `(Mapped)`,
-                            value: this.state.cedcommerce[0][i].next_level,
-                        });
-                    } else {
-                        options1.push({
-                            label: this.state.cedcommerce[0][i].name,
-                            value: this.state.cedcommerce[0][i].next_level,
-                        });
-                    }
-                } else {
-                    options1.push({
-                        label: this.state.cedcommerce[0][i].name,
-                        value: this.state.cedcommerce[0][i].next_level,
-                    });
-                }
-            }
-            return options1;
-        }
-    }
 
     renderCedcommerceCategory = () => {
         let val = this.state.options[this.state.marketPlace - 1].label;
@@ -222,74 +156,70 @@ export default class AttributeHome extends Component {
                 <BodyHeader title={"CedCommerce category"} />
 
                 <div className="mt-10">
-                    <FlexLayout childWidth="fullWidth">
-                        <Select
-                            onChange={(e) => {
-                                this.handleChange(e, "cedcommerce");
-                                this.setState({ next_levelcedcommerce: e });
-                            }}
-                            searchEable
-                            placeholder="Choose Category"
-                            options={this.options("cedcommerce")}
-                            value={this.state.next_levelcedcommerce}
-                        />
-                    </FlexLayout>
+                    <FlexLayout childWidth="fullWidth"></FlexLayout>
                 </div>
 
                 {Object.keys(this.state.cedcommerce).map((a, i) => {
                     var options1 = [];
-
-                    if (a != 0) {
-                        for (var i = 0; i < this.state.cedcommerce[a].length; i++) {
-                            if (this.state.cedcommerce[a][i]["mapping"] != undefined) {
-                                if (this.state.cedcommerce[a][i]["mapping"][val] != undefined) {
-                                    options1.push({
-                                        label: this.state.cedcommerce[a][i].name + `(Mapped)`,
-                                        value: this.state.cedcommerce[a][i].next_level.$oid,
-                                    });
-                                } else {
-                                    options1.push({
-                                        label: this.state.cedcommerce[a][i].name,
-                                        value: this.state.cedcommerce[a][i].next_level.$oid,
-                                    });
-                                }
+                    for (var i = 0; i < this.state.cedcommerce[a].length; i++) {
+                        if (this.state.cedcommerce[a][i]["mapping"] != undefined) {
+                            if (this.state.cedcommerce[a][i]["mapping"][val] != undefined) {
+                                options1.push({
+                                    label: this.state.cedcommerce[a][i].name + `(Mapped)`,
+                                    // ?? = undefine and null
+                                    // || = same as ??, but with 0 and ''
+                                    value:
+                                        this.state.cedcommerce[a][i]["next_level"].$oid ??
+                                        this.state.cedcommerce[a][i].next_level,
+                                });
                             } else {
                                 options1.push({
                                     label: this.state.cedcommerce[a][i].name,
-                                    value: this.state.cedcommerce[a][i].next_level.$oid,
+                                    value:
+                                        this.state.cedcommerce[a][i]["next_level"].$oid ??
+                                        this.state.cedcommerce[a][i].next_level,
                                 });
                             }
+                        } else {
+                            options1.push({
+                                label: this.state.cedcommerce[a][i].name,
+                                value:
+                                    this.state.cedcommerce[a][i]["next_level"].$oid ??
+                                    this.state.cedcommerce[a][i].next_level,
+                            });
                         }
-
-                        return (
-                            <div className="mt-10">
-                                <FlexLayout
-                                    childWidth="fullWidth"
-                                    direction="none"
-                                    halign="fill"
-                                    spacing="loose"
-                                >
-                                    <Select
-                                        key={i}
-                                        searchEable
-                                        value={this.state.value[a]}
-                                        placeholder="Choose Category"
-                                        options={options1}
-                                        onChange={(e) => {
-                                            let val = { ...this.state.value };
-                                            val[a] = e;
-                                            this.setState(
-                                                {
-                                                    value: val,
-                                                },
-                                                () => this.handleChange(e, "cedcommerce")
-                                            );
-                                        }}
-                                    />
-                                </FlexLayout>
-                            </div>
-                        );
                     }
+
+                    return (
+                        <div className="mt-10">
+                            <FlexLayout
+                                childWidth="fullWidth"
+                                direction="none"
+                                halign="fill"
+                                spacing="loose"
+                            >
+                                <Select
+                                    key={i}
+                                    searchEable
+                                    value={this.state.value[a]}
+                                    placeholder="Choose Category"
+                                    options={options1}
+                                    onChange={(e) => {
+                                        // console.log(e)
+                                        let val = { ...this.state.value };
+                                        val[a] = e;
+                                        this.setState(
+                                            {
+                                                value: val,
+                                            },
+                                            () => this.handleChange(e)
+                                        );
+                                    }}
+                                />
+                            </FlexLayout>
+                        </div>
+                    );
+                    // }
                 })}
                 <div className="mt-20">
                     {this.state.optionCedAttributes.length > 0 &&
@@ -298,7 +228,6 @@ export default class AttributeHome extends Component {
             </Card>
         );
     };
-
     renderCedcommerceAttribute = () => {
         return (
             <>
@@ -377,6 +306,62 @@ export default class AttributeHome extends Component {
             }
         }
     }
+    async attributeCheak() {
+        let object = {};
+        Object.keys(this.state.cedcommerce).map((a) => {
+            this.state.cedcommerce[a].forEach((item) => {
+                // console.log(item)
+                if (item["next_level"] == this.state.lastKeyCedcommerce) {
+                    object = item;
+                } else if (item["next_level"].$oid == this.state.lastKeyCedcommerce) {
+                    object = item;
+                }
+            });
+        });
+        this.setState({
+            MappedData: object,
+        });
+        let value = object["next_level"].$oid ?? object["next_level"];
+        await fetch(
+            `http://192.168.0.222/ebay/home/public/connector/profile/getCategoryAttribute?marketplace=cedcommerce&category_id=${value}`,
+            {
+                method: "GET",
+                headers: {
+                    authorization: token,
+                },
+            }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.data.length > 0) {
+                    this.setState({ dataCedAttri: data.data });
+                    let optionCedAttributes = [];
+                    data.data.forEach((item) => {
+                        optionCedAttributes.push({
+                            label: item["marketplace_attribute_id"],
+                            value: item["_id"].$oid,
+                        });
+                    });
+                    this.setState({
+                        optionCedAttributes: optionCedAttributes,
+                    });
+                }
+            });
+    }
+
+    onSubmit() {
+        let object = {};
+        let value = this.state.options[this.state.marketPlace - 1].label;
+        this.state.dataCedAttri.forEach((item) => {
+            if (item["_id"].$oid == this.state.attribute) {
+                object = item;
+            }
+        });
+        let mapping = {};
+        mapping[value] = this.state.valueMulti;
+        object["mapping"] = mapping;
+        console.log(object);
+    }
 
     renderMarketplaceAttribute = () => {
         if (this.state.flag && this.state.options1.length > 0) {
@@ -391,7 +376,7 @@ export default class AttributeHome extends Component {
                         halign="fill"
                         spacing="loose"
                     >
-                        <div className="mt-30">
+                        <div className="mt-40">
                             <ChoiceList
                                 placeholder="choose"
                                 options={options}
@@ -421,39 +406,10 @@ export default class AttributeHome extends Component {
         }
     };
 
-    handleChange1(value) {
-        localStorage.setItem("MarketPlaceAttribute", JSON.stringify(value));
-        this.setState({ marketPlace: value }, () => this.fetch());
-    }
-
-    onSubmit() {
-        let object = {};
-        let value = this.state.options[this.state.marketPlace - 1].label;
-        // console.log("object")
-        // console.log(this.state.valueMulti)
-        // console.log(this.state.attribute)
-        // console.log(this.state.dataCedAttri)
-        this.state.dataCedAttri.forEach((item) => {
-            if (item["_id"].$oid == this.state.attribute) {
-                object = item;
-            }
-        });
-        let mapping = {};
-        mapping[value] = this.state.valueMulti;
-        object["mapping"] = mapping;
-        console.log(object);
-    }
     render() {
         return (
-            <Card
-            // primaryAction={{
-            //     content: "Submit",
-            //     onClick: () => {
-            //         this.onSubmit();
-            //     },
-            // }}
-            >
-                {/* <FlexLayout halign="end">
+            <>
+                <FlexLayout halign="end">
                     <Select
                         thickness="thin"
                         placeholder="select marketplace"
@@ -464,18 +420,25 @@ export default class AttributeHome extends Component {
                         }}
                     />
                 </FlexLayout>
-                {this.state.loadingPage && <PageLoader />}
-                <FlexLayout halign="fill" spacing="loose">
-                    <FlexLayout direction="vertical">
+                <Card
+                    primaryAction={{
+                        content: "Submit",
+                        onClick: () => {
+                            this.onSubmit();
+                        },
+                    }}
+                >
+                    {this.state.loadingPage && <PageLoader></PageLoader>}
+
+                    <FlexLayout halign="fill">
                         {this.state.marketPlace && this.renderCedcommerceCategory()}
+                        {this.state.flag && this.renderMarketplaceAttribute()}
                     </FlexLayout>
-                    <FlexLayout>
-                        {this.state.flag &&
-                            this.renderMarketplaceAttribute()}
-                    </FlexLayout>
-                </FlexLayout> */}
-                <CopyOfAttributeHome></CopyOfAttributeHome>
-            </Card>
+
+                </Card>
+                {/* <Attribute_search></Attribute_search> */}
+                <FacebookCode></FacebookCode>
+            </>
         );
     }
 }
