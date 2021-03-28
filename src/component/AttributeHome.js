@@ -39,6 +39,7 @@ export default class AttributeHome extends Component {
     }
 
     get = async (url) => {
+
         this.setState({ loadingPage: true });
         const res = await fetch(
             `http://192.168.0.222/ebay/home/public/connector/` + url,
@@ -437,7 +438,7 @@ export default class AttributeHome extends Component {
 
                 </Card>
                 {/* <Attribute_search></Attribute_search> */}
-                <FacebookCode></FacebookCode>
+                {/* <FacebookCode></FacebookCode> */}
             </>
         );
     }

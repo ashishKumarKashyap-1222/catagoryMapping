@@ -65,7 +65,7 @@
   },
   {
     "name": "cellphones and smart watches",
-    "marketplace_id": "cellphones and smart watches",
+    "marketplace_id": "cellphones_and_smart_watches",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>Cell Phones & Smart Watches",
@@ -74,7 +74,7 @@
   },
   {
     "name": "Computers & Tables",
-    "marketplace_id": "Computers & Tables",
+    "marketplace_id": "Computers_&_Tables",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>Computers & Tables",
@@ -83,7 +83,7 @@
   },
   {
     "name": "computers components",
-    "marketplace_id": "computers components",
+    "marketplace_id": "computers_components",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>computers components",
@@ -92,7 +92,7 @@
   },
   {
     "name": "Video Game Consoles & Video Games",
-    "marketplace_id": "Video Game Consoles and Video Games",
+    "marketplace_id": "Video_Game_Consoles_and_Video_Games",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>Video Game Consoles & Video Games",
@@ -110,7 +110,7 @@
   },
   {
     "name": "televisions and monitors",
-    "marketplace_id": "televisions and monitors",
+    "marketplace_id": "televisions_and_monitors",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>televisions and monitors",
@@ -119,7 +119,7 @@
   },
   {
     "name": "Printers & Scanners",
-    "marketplace_id": "Printers and Scanners",
+    "marketplace_id": "Printers_and_Scanners",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>Printers & Scanners",
@@ -137,7 +137,7 @@
   },
   {
     "name": "video projector",
-    "marketplace_id": "video projector",
+    "marketplace_id": "video_projector",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>video projector",
@@ -147,7 +147,7 @@
 
   {
     "name": "camera and photo",
-    "marketplace_id": "camera and photo",
+    "marketplace_id": "camera_and_photo",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Electronics>camera and photo",
@@ -211,7 +211,7 @@
   },
   {
     "name": "Baby Feeding",
-    "marketplace_id": "Baby Feeding",
+    "marketplace_id": "Baby_Feeding",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Baby Products>Baby Feeding",
@@ -220,7 +220,7 @@
   },
   {
     "name": "Baby Transport",
-    "marketplace_id": "Baby Transport",
+    "marketplace_id": "Baby_Transport",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Baby Products>Baby Transport",
@@ -229,7 +229,7 @@
   },
   {
     "name": "Diapering & Potty Training",
-    "marketplace_id": "Diapering & Potty Training",
+    "marketplace_id": "Diapering &_Potty_Training",
     "marketplace_parent_id": "0",
     "marketplace": "facebook",
     "full_path": "Baby Products>Diapering & Potty Training",
