@@ -33,7 +33,7 @@ export default class Edit extends Component {
     }
     fetch() {
         this.setState({ loadingPage: true })
-        fetch(`http://192.168.0.222/ebay/home/public/connector/profile/searchCategory?filters[marketplace]=cedcommerce&filters[name]=${this.state.value}`, {
+        fetch(`http://192.168.4.96/ebay/home/public/connector/profile/searchCategory?filters[marketplace]=cedcommerce&filters[name]=${this.state.value}`, {
             method: 'get',
             headers: {
                 Authorization: token

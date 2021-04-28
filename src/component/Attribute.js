@@ -16,29 +16,31 @@
 
 
 
-// await fetch('https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json').then(res => res.json())
-//     .then(data => {
-//         console.log("object")
-//         Object.keys(data).map(key => {
+//         await fetch('https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/categoriesCBT.json').then(res => res.json())
+//             .then(data => {
+//                 // console.log(data)
+//                 console.log("object")
+//                 Object.keys(data).map(key => {
 
-//             // console.log(key)
-//             id.push(key)
+//                     // console.log(key)
+//                     id.push(key)
 
-//         })
-//         console.log(JSON.stringify(id))
+//                 })
+//                 // console.log(JSON.stringify(id))
 
-//         // this.setState({
-//         //     Id: id
-//         // }
-//         // , () => { this.dataImport() }
-//         // )
-//     }
-//     )
+//                 // this.setState({
+//                 //     Id: id
+//                 // }
+//                 // , () => { this.dataImport() }
+//                 // )
+//             }
+//             )
 
 
 
 //         await fetch('https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/array.txt').then(res => res.json())
 //             .then(data => {
+//                 console.log(data)
 //                 this.setState({
 //                     data: data
 
@@ -51,13 +53,15 @@
 //     dataImport() {
 //         let ashish = {}
 //         let counter = 0
-//         let temp = this.state.data.slice(7000, 8837)
+//         console.log(this.state.data.length)
+//         //8838
+//         let temp = this.state.data.slice(8000, 8838)
 //         temp.forEach(async (a) => {
 
-//             await fetch(`http://192.168.0.222/ebay/home/public/mercadohome/product/attributes?shop_id=9&category_id=${a}`, {
+//             await fetch(`http://192.168.4.96/ebay/home/public/mercadohome/product/attributes?shop_id=9&category_id=${a}`, {
 //                 method: "get",
 //                 headers: {
-//                     Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiMiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTY0NjczMTEwNiwiaXNzIjoiaHR0cHM6XC9cL2FwcHMuY2VkY29tbWVyY2UuY29tIiwiYXVkIjoiMTI3LjAuMC4xIiwidG9rZW5faWQiOjE2MTUxOTUxMDZ9.V3t-AMzRqqNrRZt2PJvqV-8MBGVZ5iIv6ynsnEpqfFObtHV-BUr8DOCXkBKBDV18b3TySybpKroqc6xgFLXslnrlcPvDQHrdGMy51i-ILGZEnBkbfN9SRApNHRSF5bhGpKVdUx5hZff1cWYghdQrwi-KmByWKFW5l4aHaF183-8AOaKOIrxy1Jc7ZG3gYLVUIUYuH9p-u9D8ebceiC2R16Xc80xRi0_UDz1zRM_RYtJLc5FpoVwvo7PTDr30S8ATf5tCjXrt94iQUlPHYtxF9bSCvyuKBwKm0amNpkvoMpESNNf2MUq0932RBR80Rg4ohWc6EnF6Wxu3iFYgFZnwOg "
+//                     Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjA0YjNhMDU2YmI3OTAzYTczYjFmODgzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNjQ3MTQ4MDAyLCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJhdWQiOiIxMjcuMC4wLjEiLCJ0b2tlbl9pZCI6IjYwNGM0ODYyZDUwZmMyMDFmNzJkMTM4MiJ9.e1WDhAJPUjJaD1r0lfHSKbg7gutCYxr1O9ciprEpw5kSOqiBqKyZsvtABzGGienw3HbubqE1H1aGJR6fEqUntQQIkrVw38fX19nZ3bEH4nKlqbr3jl8UbbMPNo6mCrU4A7QwkDIbwL4Hj-pfQVtiQRzqb3k_WaPTa_-jJBTkIBMQFrGl4LdsLp9Iij-nJ5YWLftCjrLcyo0wNWSPk8nbjbko5gXW4f38o3Ws2JKgs8ZiPHPh0ZjYcHm8ZJsaNFzMB99gou5p9LNhgw0sFlbEOp0AGn60Qx-rAWXQQiMO2aEMBYF0B6H8fTmA79TTPnrdla3mGp9XSCJKpC8n2YEp9Q "
 //                 }
 //             }).then(data => data.json())
 //                 .then(data1 => {
@@ -67,12 +71,13 @@
 //                 })
 //             console.log(JSON.stringify(ashish))
 
-//         })
+//             // })
 
-//         // console.log(this.state.Id.length)
-//     }
+
+//             // console.log(this.state.Id.length)
+//         }
 //     render() {
-//         return (
+//             return(
 //             <div>
 
 //             </div >
@@ -106,7 +111,11 @@ export default class Attribute extends Component {
 
                 this.setState({
                     data: data
-                }, () => { this.fetchAttribute() })
+                },
+                    () => {
+                        this.fetchAttribute()
+                    }
+                )
 
 
 
@@ -124,8 +133,9 @@ export default class Attribute extends Component {
 
     fetchAttribute() {
         let temp = []
-        fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/category/main/total_attribute.json").then(resp => resp.json())
+        fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/attributes/main/mercardo_cbt.json").then(resp => resp.json())
             .then(data => {
+                console.log(data)
                 Object.keys(data).map((key) => {
 
 
@@ -190,7 +200,7 @@ export default class Attribute extends Component {
                 //         }
                 //     })
                 // })
-                console.log(temp)
+                // console.log(temp)
                 this.nameAdd(temp)
 
             })
@@ -201,8 +211,8 @@ export default class Attribute extends Component {
         let FinalData = []
         await fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/attributes/main/allCategoriesashish.json").then(res => res.json())
             .then(data => {
-                console.log(data)
-                console.log(data.length)
+                // console.log(data)
+                // console.log(data.length)
                 list.forEach(a => {
                     data.forEach(val => {
                         // console.log("data")
@@ -217,7 +227,7 @@ export default class Attribute extends Component {
 
             })
         console.log(JSON.stringify(FinalData))
-        // console.log("FinalData", FinalData.length)
+        console.log("FinalData", FinalData.length)
     }
     render() {
         return (

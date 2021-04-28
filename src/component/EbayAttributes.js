@@ -15,13 +15,10 @@ export default class EbayAttributes extends Component {
         let raw = []
         await fetch("https://raw.githubusercontent.com/ashishk455-CEDCOSS/attributes/main/attributes.json").then(res => res.json())
             .then(data => {
-                // console.log(data)
                 data.forEach(val => {
-                    // console.log(val)
 
                     raw.push({
 
-                        // "name": template.name,
                         "code": val.category_id,
                         "marketplace": 'cedcommerce',
                         "marketplace_attribute_id": val.name,
@@ -42,7 +39,6 @@ export default class EbayAttributes extends Component {
         }, () => {
             this.nameAdd()
         })
-        // console.log(raw)
     }
     async nameAdd() {
 
@@ -51,13 +47,9 @@ export default class EbayAttributes extends Component {
             .then(data => {
                 console.log(data)
                 console.log(this.state.data.length)
-                console.log(data.length)
 
                 this.state.data.forEach(a => {
                     data.forEach(val => {
-
-
-                        // console.log(val)
                         if (val.marketplace == "cedcommerce" && val.marketplace_id == a.code) {
                             FinalData.push({ ...a, name: val.name, category_id: val['_id'].$oid })
                         }

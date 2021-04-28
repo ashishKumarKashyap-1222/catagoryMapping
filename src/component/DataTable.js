@@ -24,7 +24,6 @@ export default class DataTable extends Component {
                 }
             },
             rows: []
-
         }
     }
     datatable() {
@@ -52,9 +51,6 @@ export default class DataTable extends Component {
         })
         let row = []
         let columns = this.state.columns
-
-
-
         this.state.dataGoogle.forEach(data => {
             let temp = {}
             Object.keys(columns).map(key => {
@@ -68,14 +64,14 @@ export default class DataTable extends Component {
                 }
             })
             row.push(temp)
-
         })
-
         return (< Table
             columns={this.state.columns}
             rows={row}
         />)
     }
+
+
     submit(data, full_Path) {
         let val = { ...data }
         let mapping = {}
@@ -89,23 +85,15 @@ export default class DataTable extends Component {
         // update([val])
         // setTimeout(() => { window.location.reload(true) }, 700)
 
-
-
-
     }
 
     render() {
 
         return (
-
-
             <Card cardType="selego">
                 {this.props.lastKey && this.datatable()}
                 {this.datatable()}
             </Card>
-
-
-
         )
 
     }

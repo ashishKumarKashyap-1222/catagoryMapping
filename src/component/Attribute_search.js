@@ -30,7 +30,7 @@ export default class Attribute_search extends Component {
     get = async (url) => {
         this.setState({ loadingPage: true });
         const res = await fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `http://192.168.4.96/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {

@@ -44,7 +44,7 @@ export default class Edit_click extends Component {
     get = (url) => {
         this.setState({ loadingPage: true })
         return fetch(
-            `http://192.168.0.222/ebay/home/public/connector/` + url,
+            `http://192.168.4.96/ebay/home/public/connector/` + url,
             {
                 method: "get",
                 headers: {

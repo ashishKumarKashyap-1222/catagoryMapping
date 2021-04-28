@@ -1,7 +1,7 @@
 
 async function update(data) {
     let message1 = '';
-    await fetch(`http://192.168.0.222/ebay/home/public/connector/profile/createUpdateCategory`, {
+    await fetch(`http://49b8661b6164.ngrok.io/ebay/home/public/connector/profile/createUpdateCategory`, {
         method: 'post',
         body: JSON.stringify(data),
         headers: {

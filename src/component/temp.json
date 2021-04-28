@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Mixers",
+    "marketplace_id": "25373",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Mixers",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Slicers",
+    "marketplace_id": "25374",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Slicers",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Scales",
+    "marketplace_id": "25383",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Scales",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Food Processors",
+    "marketplace_id": "36346",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Food Processors",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Mixer Accessories",
+    "marketplace_id": "53221",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Mixer Accessories",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Stick Blenders",
+    "marketplace_id": "53222",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Stick Blenders",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Can Openers",
+    "marketplace_id": "57099",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Can Openers",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Choppers & Cutters",
+    "marketplace_id": "67164",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Choppers & Cutters",
+    "children": [],
+    "level": 4
+  },
+  {
+    "name": "Meat Grinders & Butcher Supply",
+    "marketplace_id": "95074",
+    "marketplace_parent_id": "95078",
+    "marketplace": "cedcommerce",
+    "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply",
+    "children": [
+      {
+        "name": "Meat Grinders",
+        "marketplace_id": "25372",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Meat Grinders",
+        "children": [],
+        "level": 5
+      },
+      {
+        "name": "Knives",
+        "marketplace_id": "53215",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Knives",
+        "children": [],
+        "level": 5
+      },
+      {
+        "name": "Meat Tenderizers",
+        "marketplace_id": "57088",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Meat Tenderizers",
+        "children": [],
+        "level": 5
+      },
+      {
+        "name": "Sausage Stuffers",
+        "marketplace_id": "95075",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Sausage Stuffers",
+        "children": [],
+        "level": 5
+      },
+      {
+        "name": "Saws",
+        "marketplace_id": "95076",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Saws",
+        "children": [],
+        "level": 5
+      },
+      {
+        "name": "Other Commercial Butcher Equip",
+        "marketplace_id": "95077",
+        "marketplace_parent_id": "95074",
+        "marketplace": "cedcommerce",
+        "full_path": "Business & Industrial>Restaurant & Catering>Commercial Kitchen Equipment>Food Preparation Equipment>Meat Grinders & Butcher Supply>Other Commercial Butcher Equip",
+        "children": [],
+        "level": 5
+      }
+    ]
+  }
+]
